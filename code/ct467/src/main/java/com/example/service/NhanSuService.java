@@ -16,7 +16,7 @@ public class NhanSuService {
     public void themSinhVien(Scanner scanner) {
         System.out.print("Nhập năm bắt đầu học (VD: 23, 24): ");
         String namHoc = scanner.nextLine();
-        
+
         String newMssv = repository.generateMSSV(namHoc);
         System.out.println("=> MSSV được cấp tự động: " + newMssv);
 
@@ -43,7 +43,7 @@ public class NhanSuService {
     public void themGiangVien(Scanner scanner) {
         System.out.print("Nhập mã Khoa của giảng viên (VD: 01): ");
         String maKhoa = scanner.nextLine();
-        
+
         String newMaGv = repository.generateMaGV(maKhoa);
         System.out.println("=> Mã GV được cấp tự động: " + newMaGv);
 

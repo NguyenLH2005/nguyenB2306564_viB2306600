@@ -14,8 +14,8 @@ import com.example.model.Account;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-    private static String loggedInRole = null; 
-    private static String loggedInUsername = null; 
+    private static String loggedInRole = null;
+    private static String loggedInUsername = null;
     private static boolean running = true;
 
     // Services
@@ -24,6 +24,8 @@ public class Main {
     private static NhanSuService nhanSuService = new NhanSuService();
     private static HocPhanService hocPhanService = new HocPhanService();
     private static DiemService diemService = new DiemService();
+    private static HocPhiService hocPhiService = new HocPhiService();
+    private static SinhVienService sinhVienService = new SinhVienService();
 
     public static void main(String[] args) {
         System.setProperty("file.encoding", "UTF-8");
@@ -106,22 +108,22 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    System.out.println("\n--- [1] Course Registration (Call HocPhanService) ---");
+                    hocPhanService.thucHienDangKy(scanner, loggedInUsername);
                     break;
                 case "2":
-                    System.out.println("\n--- [2] Cancel Course Registration (Call HocPhanService) ---");
+                    hocPhanService.thucHienHuyDangKy(scanner, loggedInUsername);
                     break;
                 case "3":
-                    System.out.println("\n--- [3] Pay Tuition Fee (Call HocPhiService) ---");
+                    hocPhiService.thucHienDongTien(scanner, loggedInUsername);
                     break;
                 case "4":
-                    System.out.println("\n--- [4] View Transcripts & Calculate GPA (Call SinhVienService) ---");
+                    sinhVienService.xemBangDiemVaGPA(loggedInUsername);
                     break;
                 case "5":
-                    System.out.println("\n--- [5] Check Class Size (Call HocPhanService) ---");
+                    hocPhanService.kiemTraSiSoLHP(scanner);
                     break;
                 case "6":
-                    System.out.println("\n--- [6] Look up Personal Debt (Call SinhVienService) ---");
+                    sinhVienService.traCuuCongNoCaNhan(scanner, loggedInUsername);
                     break;
                 case "0":
                     loggedInRole = null;
@@ -200,14 +202,16 @@ public class Main {
                     System.out.println("\n--- [4] Quản lý Hồ sơ Nhân sự ---");
                     System.out.println("1 - Thêm Giảng Viên | 2 - Thêm Sinh Viên");
                     String nChoice = scanner.nextLine();
-                    if (nChoice.equals("1")) nhanSuService.themGiangVien(scanner);
-                    else if (nChoice.equals("2")) nhanSuService.themSinhVien(scanner);
+                    if (nChoice.equals("1"))
+                        nhanSuService.themGiangVien(scanner);
+                    else if (nChoice.equals("2"))
+                        nhanSuService.themSinhVien(scanner);
                     break;
                 case "5":
-                    System.out.println("\n--- [5] Thống kê SV Nợ Học Phí (Chức năng TV B) ---");
+                    hocPhiService.xemThongKeNoHocPhi(scanner);
                     break;
                 case "6":
-                    System.out.println("\n--- [6] Báo cáo Doanh thu (Chức năng TV B) ---");
+                    hocPhiService.xemBaoCaoDoanhThu(scanner);
                     break;
                 case "0":
                     loggedInRole = null;
