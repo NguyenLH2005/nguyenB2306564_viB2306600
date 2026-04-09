@@ -4,6 +4,8 @@ public class Nganh {
     private String maNganh;
     private String tenNganh;
     private String maKhoa;
+    private String tenKhoa; // Bo sung de hien thi
+
 
     public Nganh() {}
 
@@ -21,4 +23,7 @@ public class Nganh {
 
     public String getMaKhoa() { return maKhoa; }
     public void setMaKhoa(String maKhoa) { this.maKhoa = maKhoa; }
+
+    public String getTenKhoa() { return tenKhoa; }
+    public void setTenKhoa(String tenKhoa) { this.tenKhoa = tenKhoa; }
 }

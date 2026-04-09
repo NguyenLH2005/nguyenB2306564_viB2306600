@@ -121,4 +121,31 @@ public class DiemRepository {
             return false;
         }
     }
+
+    public void xemDanhSachSinhVienVaDiem(String maLHP) {
+        String sql = "SELECT s.MSSV, s.HoTen, d.Diem FROM DIEM d JOIN SINH_VIEN s ON d.MSSV = s.MSSV WHERE d.MaLHP = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, maLHP);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                System.out.println("\nDANH SACH SINH VIEN - LOP HOC PHAN: " + maLHP);
+                System.out.println("---------------------------------------------------------------");
+                System.out.printf("%-15s %-30s %-10s\n", "MSSV", "Ho Ten", "Diem");
+                System.out.println("---------------------------------------------------------------");
+                boolean hasData = false;
+                while (rs.next()) {
+                    hasData = true;
+                    Object diemObj = rs.getObject("Diem");
+                    String diemStr = (diemObj == null) ? "Chua nhap" : String.format("%.2f", rs.getFloat("Diem"));
+                    System.out.printf("%-15s %-30s %-10s\n", rs.getString("MSSV"), rs.getString("HoTen"), diemStr);
+                }
+                if (!hasData) {
+                    System.out.println("Lop chua co sinh vien nao dang ky.");
+                }
+                System.out.println("---------------------------------------------------------------");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

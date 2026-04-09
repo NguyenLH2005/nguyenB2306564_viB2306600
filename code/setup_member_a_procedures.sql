@@ -1,10 +1,8 @@
 DELIMITER $$
-
 -- ==============================================================================
 -- 1. [TASK 9] THỦ TỤC: DANH SÁCH LỚP HỌC PHẦN ĐỂ NHẬP ĐIỂM (NGHIỆP VỤ GIẢNG VIÊN)
 -- Mô tả: Truyền mã Giảng Viên và mã Học Kỳ, xuất ra danh sách các lớp Giảng Viên đó đang dạy.
 -- ==============================================================================
-DROP PROCEDURE IF EXISTS sp_DanhSachLHP_GiangVien$$
 
 CREATE PROCEDURE sp_DanhSachLHP_GiangVien(
     IN p_MaGV VARCHAR(15), 
@@ -26,8 +24,6 @@ END$$
 -- 2. [TASK 10] THỦ TỤC: BÁO CÁO CHẤT LƯỢNG ĐÀO TẠO
 -- Mô tả: Truyền mã Lớp Học Phần, đếm tổng sinh viên (sĩ số), số rớt/đậu và điểm cao nhất.
 -- ==============================================================================
-DROP PROCEDURE IF EXISTS sp_BaoCaoChatLuong_LHP$$
-
 CREATE PROCEDURE sp_BaoCaoChatLuong_LHP(
     IN p_MaLHP VARCHAR(20)
 )
@@ -42,3 +38,4 @@ BEGIN
     WHERE MaLHP = p_MaLHP;
 END$$
 
+DELIMITER;

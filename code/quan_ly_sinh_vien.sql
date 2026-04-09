@@ -286,10 +286,4 @@ DELIMITER ;
 -- 8. DỮ LIỆU MẪU (BỔ SUNG)
 -- ==============================================================================
 
-INSERT INTO LOAI_TAI_KHOAN (MaLoaiTK, TenLoaiTK) VALUES 
-('SV', 'Sinh Viên'), 
-('GV', 'Giảng Viên'), 
-('ADMIN', 'Quản Trị Viên');
 
-INSERT INTO ACCOUNT (Username, Password, MaLoaiTK) VALUES 
-('admin', 'admin123', 'ADMIN');

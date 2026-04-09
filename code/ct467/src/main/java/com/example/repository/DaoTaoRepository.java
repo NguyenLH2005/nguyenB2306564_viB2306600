@@ -73,12 +73,14 @@ public class DaoTaoRepository {
     // ================= NGANH =================
     public List<Nganh> getAllNganh() {
         List<Nganh> list = new ArrayList<>();
-        String sql = "SELECT * FROM NGANH";
+        String sql = "SELECT n.*, k.TenKhoa FROM NGANH n JOIN KHOA k ON n.MaKhoa = k.MaKhoa ORDER BY n.MaKhoa, n.TenNganh";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                list.add(new Nganh(rs.getString("MaNganh"), rs.getString("TenNganh"), rs.getString("MaKhoa")));
+                Nganh n = new Nganh(rs.getString("MaNganh"), rs.getString("TenNganh"), rs.getString("MaKhoa"));
+                n.setTenKhoa(rs.getString("TenKhoa"));
+                list.add(n);
             }
         } catch (Exception e) {
             System.out.println("Loi: " + e.getMessage());
@@ -129,12 +131,14 @@ public class DaoTaoRepository {
     // ================= LOP =================
     public List<Lop> getAllLop() {
         List<Lop> list = new ArrayList<>();
-        String sql = "SELECT * FROM LOP";
+        String sql = "SELECT l.*, n.TenNganh FROM LOP l JOIN NGANH n ON l.MaNganh = n.MaNganh ORDER BY l.MaNganh, l.TenLop";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                list.add(new Lop(rs.getString("MaLop"), rs.getString("TenLop"), rs.getString("MaNganh")));
+                Lop lop = new Lop(rs.getString("MaLop"), rs.getString("TenLop"), rs.getString("MaNganh"));
+                lop.setTenNganh(rs.getString("TenNganh"));
+                list.add(lop);
             }
         } catch (Exception e) {
             System.out.println("Loi: " + e.getMessage());

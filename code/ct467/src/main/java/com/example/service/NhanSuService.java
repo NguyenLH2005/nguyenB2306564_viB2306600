@@ -46,10 +46,10 @@ public class NhanSuService {
             switch (choice) {
                 case "1":
                     List<SinhVien> svList = repository.getAllSinhVien();
-                    System.out.printf("%-15s %-30s %-15s\n", "MSSV", "Ho Ten", "Thuoc Lop");
-                    System.out.println("------------------------------------------------------------");
+                    System.out.printf("%-15s %-30s %-30s %-15s\n", "MSSV", "Ho Ten", "Ten Lop", "Ma Lop");
+                    System.out.println("---------------------------------------------------------------------------------------------");
                     for (SinhVien sv : svList) {
-                        System.out.printf("%-15s %-30s %-15s\n", sv.getMssv(), sv.getHoTen(), sv.getMaLop());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", sv.getMssv(), sv.getHoTen(), sv.getTenLop(), sv.getMaLop());
                     }
                     break;
                 case "2":
@@ -114,10 +114,10 @@ public class NhanSuService {
             switch (choice) {
                 case "1":
                     List<GiangVien> gvList = repository.getAllGiangVien();
-                    System.out.printf("%-15s %-30s %-15s\n", "Ma GV", "Ho Ten", "Khoa");
-                    System.out.println("------------------------------------------------------------");
+                    System.out.printf("%-15s %-30s %-30s %-15s\n", "Ma GV", "Ho Ten", "Ten Khoa", "Ma Khoa");
+                    System.out.println("---------------------------------------------------------------------------------------------");
                     for (GiangVien gv : gvList) {
-                        System.out.printf("%-15s %-30s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getMaKhoa());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getTenKhoa(), gv.getMaKhoa());
                     }
                     break;
                 case "2":

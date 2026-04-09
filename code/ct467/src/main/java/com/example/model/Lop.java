@@ -4,6 +4,8 @@ public class Lop {
     private String maLop;
     private String tenLop;
     private String maNganh;
+    private String tenNganh; // Bo sung
+
 
     public Lop() {}
 
@@ -21,4 +23,7 @@ public class Lop {
 
     public String getMaNganh() { return maNganh; }
     public void setMaNganh(String maNganh) { this.maNganh = maNganh; }
+
+    public String getTenNganh() { return tenNganh; }
+    public void setTenNganh(String tenNganh) { this.tenNganh = tenNganh; }
 }

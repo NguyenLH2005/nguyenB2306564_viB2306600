@@ -22,6 +22,9 @@ public class DiemService {
     public void thucHienNhapDiem(Scanner scanner) {
         System.out.print("Nhap ma Lop hoc phan: ");
         String maLHP = scanner.nextLine();
+        
+        repository.xemDanhSachSinhVienVaDiem(maLHP);
+        
         System.out.print("Nhap MSSV sinh vien can cham diem: ");
         String mssv = scanner.nextLine();
         System.out.print("Nhap diem (0.0 - 10.0): ");

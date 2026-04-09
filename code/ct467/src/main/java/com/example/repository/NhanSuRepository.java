@@ -35,7 +35,7 @@ public class NhanSuRepository {
 
     public List<SinhVien> getAllSinhVien() {
         List<SinhVien> list = new ArrayList<>();
-        String sql = "SELECT * FROM SINH_VIEN";
+        String sql = "SELECT s.*, l.TenLop FROM SINH_VIEN s JOIN LOP l ON s.MaLop = l.MaLop ORDER BY s.MaLop, s.HoTen";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
@@ -45,6 +45,7 @@ public class NhanSuRepository {
                 sv.setHoTen(rs.getString("HoTen"));
                 if (rs.getDate("NgaySinh") != null) sv.setNgaySinh(rs.getDate("NgaySinh").toLocalDate());
                 sv.setMaLop(rs.getString("MaLop"));
+                sv.setTenLop(rs.getString("TenLop"));
                 list.add(sv);
             }
         } catch (Exception e) {
@@ -156,7 +157,7 @@ public class NhanSuRepository {
 
     public List<GiangVien> getAllGiangVien() {
         List<GiangVien> list = new ArrayList<>();
-        String sql = "SELECT * FROM GIANG_VIEN";
+        String sql = "SELECT g.*, k.TenKhoa FROM GIANG_VIEN g JOIN KHOA k ON g.MaKhoa = k.MaKhoa ORDER BY g.MaKhoa, g.HoTen";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
@@ -166,6 +167,7 @@ public class NhanSuRepository {
                 gv.setHoTen(rs.getString("HoTen"));
                 if (rs.getDate("NgaySinh") != null) gv.setNgaySinh(rs.getDate("NgaySinh").toLocalDate());
                 gv.setMaKhoa(rs.getString("MaKhoa"));
+                gv.setTenKhoa(rs.getString("TenKhoa"));
                 list.add(gv);
             }
         } catch (Exception e) {

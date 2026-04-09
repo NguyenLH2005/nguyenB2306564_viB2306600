@@ -7,6 +7,8 @@ public class GiangVien {
     private String hoTen;
     private LocalDate ngaySinh;
     private String maKhoa;
+    private String tenKhoa;
+
 
     public GiangVien() {}
 
@@ -28,4 +30,7 @@ public class GiangVien {
 
     public String getMaKhoa() { return maKhoa; }
     public void setMaKhoa(String maKhoa) { this.maKhoa = maKhoa; }
+
+    public String getTenKhoa() { return tenKhoa; }
+    public void setTenKhoa(String tenKhoa) { this.tenKhoa = tenKhoa; }
 }

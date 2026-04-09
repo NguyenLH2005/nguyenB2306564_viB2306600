@@ -114,10 +114,10 @@ public class DaoTaoService {
             switch (choice) {
                 case "1":
                     List<Nganh> nganhs = repository.getAllNganh();
-                    System.out.printf("%-15s %-30s %-15s\n", "Ma Nganh", "Ten Nganh", "Thuoc Khoa");
-                    System.out.println("------------------------------------------------------------");
+                    System.out.printf("%-15s %-30s %-30s %-15s\n", "Ma Nganh", "Ten Nganh", "Ten Khoa", "Ma Khoa");
+                    System.out.println("---------------------------------------------------------------------------------------------");
                     for (Nganh n : nganhs) {
-                        System.out.printf("%-15s %-30s %-15s\n", n.getMaNganh(), n.getTenNganh(), n.getMaKhoa());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", n.getMaNganh(), n.getTenNganh(), n.getTenKhoa(), n.getMaKhoa());
                     }
                     break;
                 case "2":
@@ -175,10 +175,10 @@ public class DaoTaoService {
             switch (choice) {
                 case "1":
                     List<Lop> lops = repository.getAllLop();
-                    System.out.printf("%-15s %-30s %-15s\n", "Ma Lop", "Ten Lop", "Thuoc Nganh");
-                    System.out.println("------------------------------------------------------------");
+                    System.out.printf("%-15s %-30s %-30s %-15s\n", "Ma Lop", "Ten Lop", "Ten Nganh", "Ma Nganh");
+                    System.out.println("---------------------------------------------------------------------------------------------");
                     for (Lop l : lops) {
-                        System.out.printf("%-15s %-30s %-15s\n", l.getMaLop(), l.getTenLop(), l.getMaNganh());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", l.getMaLop(), l.getTenLop(), l.getTenNganh(), l.getMaNganh());
                     }
                     break;
                 case "2":

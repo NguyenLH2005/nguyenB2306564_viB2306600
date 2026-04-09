@@ -1,6 +1,7 @@
 -- ==============================================================================
 -- 3. [TASK 1] THỦ TỤC & TRANSACTION: ĐĂNG KÝ HỌC PHẦN (THÀNH VIÊN B)
 -- ==============================================================================
+DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_DangKyHocPhan$$
 
 CREATE PROCEDURE sp_DangKyHocPhan(
@@ -73,8 +74,6 @@ END$$
 -- ==============================================================================
 -- 6. [TASK 4] STORED FUNCTION: TÍNH GPA (THÀNH VIÊN B)
 -- ==============================================================================
-DELIMITER $$
-
 DROP FUNCTION IF EXISTS func_TinhGPA$$
 
 CREATE FUNCTION func_TinhGPA(p_MSSV VARCHAR(10)) 
@@ -85,37 +84,21 @@ BEGIN
     DECLARE v_TongTinChi INT DEFAULT 0;
     DECLARE v_TongDiem FLOAT DEFAULT 0;
 
-    -- Sử dụng CASE WHEN để quy đổi điểm hệ 10 sang hệ 4 trước khi nhân với tín chỉ
     SELECT 
-        SUM(
-            (CASE 
-                WHEN d.Diem < 4.0 THEN 0.0
-                WHEN d.Diem >= 4.0 AND d.Diem < 5.0 THEN 1.0
-                WHEN d.Diem >= 5.0 AND d.Diem < 6.0 THEN 1.5
-                WHEN d.Diem >= 6.0 AND d.Diem < 6.5 THEN 2.0
-                WHEN d.Diem >= 6.5 AND d.Diem < 7.0 THEN 2.5
-                WHEN d.Diem >= 7.0 AND d.Diem < 8.0 THEN 3.0
-                WHEN d.Diem >= 8.0 AND d.Diem < 9.0 THEN 3.5
-                WHEN d.Diem >= 9.0 AND d.Diem <= 10.0 THEN 4.0
-                ELSE 0.0 -- Trường hợp dữ liệu lỗi hoặc ngoài vùng
-            END) * mh.SoTinChi
-        ), 
-        SUM(mh.SoTinChi)
+        SUM(d.Diem * mh.SoTinChi), 
+        SUM(CASE WHEN d.Diem IS NOT NULL THEN mh.SoTinChi ELSE 0 END)
         INTO v_TongDiem, v_TongTinChi
-    FROM diem d
-    JOIN lop_hoc_phan lhp ON d.MaLHP = lhp.MaLHP
-    JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon
+    FROM DIEM d
+    JOIN LOP_HOC_PHAN lhp ON d.MaLHP = lhp.MaLHP
+    JOIN MON_HOC mh ON lhp.MaMon = mh.MaMon
     WHERE d.MSSV = p_MSSV AND d.Diem IS NOT NULL;
 
-    -- Kiểm tra an toàn trước khi chia
     IF v_TongTinChi IS NOT NULL AND v_TongTinChi > 0 THEN
         SET v_GPA = ROUND(v_TongDiem / v_TongTinChi, 2);
     END IF;
 
     RETURN v_GPA;
 END$$
-
-DELIMITER ;
 
 -- ==============================================================================
 -- 7. [TASK 5] STORED FUNCTION: KIỂM TRA SĨ SỐ LỚP HỌC PHẦN (THÀNH VIÊN B)
@@ -210,3 +193,4 @@ BEGIN
 END$$
 
 DELIMITER ;
+
