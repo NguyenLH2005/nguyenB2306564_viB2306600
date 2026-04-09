@@ -1,9 +1,20 @@
 package com.example.service;
 
-// Chức năng:
-// 1. Đăng ký học phần
-// 2. Hủy đăng ký học phần
-// 5. Kiểm tra sĩ số Lớp học phần
-// 9. Danh sách LHP để Nhập điểm
+import com.example.repository.HocPhanRepository;
+import java.util.Scanner;
+
 public class HocPhanService {
+    private HocPhanRepository repository;
+
+    public HocPhanService() {
+        this.repository = new HocPhanRepository();
+    }
+
+    public void xemDanhSachLopGiangDay(Scanner scanner, String maGV) {
+        System.out.print("Nhập mã học kỳ (VD: HK1_2425): ");
+        String maHocKy = scanner.nextLine();
+        
+        System.out.println("\nDANH SÁCH LỚP HỌC PHẦN ĐANG GIẢNG DẠY");
+        repository.xuatDanhSachLHP(maGV, maHocKy);
+    }
 }

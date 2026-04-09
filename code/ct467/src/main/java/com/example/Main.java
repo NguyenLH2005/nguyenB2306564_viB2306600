@@ -3,6 +3,8 @@ package com.example;
 import java.sql.Connection;
 import java.util.Scanner;
 import com.example.db.DBConnection;
+import com.example.service.*;
+import com.example.model.Account;
 
 // Luồng hoạt dộng Main -> service -> Repository -> DB
 // Main chạy console
@@ -12,8 +14,16 @@ import com.example.db.DBConnection;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-    private static String loggedInRole = null; // Biến lưu loại tài khoản: SV, GV, ADMIN
+    private static String loggedInRole = null; 
+    private static String loggedInUsername = null; 
     private static boolean running = true;
+
+    // Services
+    private static TaiKhoanService taiKhoanService = new TaiKhoanService();
+    private static DaoTaoService daoTaoService = new DaoTaoService();
+    private static NhanSuService nhanSuService = new NhanSuService();
+    private static HocPhanService hocPhanService = new HocPhanService();
+    private static DiemService diemService = new DiemService();
 
     public static void main(String[] args) {
         System.setProperty("file.encoding", "UTF-8");
@@ -67,19 +77,13 @@ public class Main {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        // Chỗ này sẽ gọi TaiKhoanService(username, password) để quyết định role.
-        // Tạm thời hardcode để test luồng:
-        if (username.equals("sv") && password.equals("123")) {
-            loggedInRole = "SV";
-            System.out.println("=> Login successful! Welcome Student.");
-        } else if (username.equals("gv") && password.equals("123")) {
-            loggedInRole = "GV";
-            System.out.println("=> Login successful! Welcome Teacher.");
-        } else if (username.equals("admin") && password.equals("123")) {
-            loggedInRole = "ADMIN";
-            System.out.println("=> Login successful! Welcome Admin.");
+        Account acc = taiKhoanService.login(username, password);
+        if (acc != null) {
+            loggedInRole = acc.getMaLoaiTK();
+            loggedInUsername = acc.getUsername();
+            System.out.println("=> Đăng nhập thành công! Quyền: " + loggedInRole);
         } else {
-            System.out.println("=> Invalid username or password! Please try again.");
+            System.out.println("=> Sai tài khoản hoặc mật khẩu! Vui lòng thử lại.");
         }
     }
 
@@ -144,21 +148,22 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    System.out.println("\n--- [1] Operate Class List (Call HocPhanService) ---");
+                    hocPhanService.xemDanhSachLopGiangDay(scanner, loggedInUsername);
                     break;
                 case "2":
-                    System.out.println("\n--- [2] Grade Management (Call DiemService) ---");
+                    diemService.thucHienNhapDiem(scanner);
                     break;
                 case "3":
-                    System.out.println("\n--- [3] Training Quality Report (Call DiemService) ---");
+                    diemService.xuatBaoCaoChatLuong(scanner);
                     break;
                 case "0":
                     loggedInRole = null;
+                    loggedInUsername = null;
                     gvRunning = false;
-                    System.out.println("=> Logged out!");
+                    System.out.println("=> Đã đăng xuất!");
                     break;
                 default:
-                    System.out.println("Invalid selection, please select again!");
+                    System.out.println("Lựa chọn chưa đúng!");
             }
         }
     }
@@ -180,30 +185,38 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    System.out.println("\n--- [1] Manage Academic Structure (Call DaoTaoService) ---");
+                    System.out.println("\n--- [1] Quản lý Khoa ---");
+                    daoTaoService.themKhoaMoi(scanner);
                     break;
                 case "2":
-                    System.out.println("\n--- [2] Manage Curriculum (Call DaoTaoService) ---");
+                    System.out.println("\n--- [2] Quản lý Môn Học ---");
+                    daoTaoService.themMonHoc(scanner);
                     break;
                 case "3":
-                    System.out.println("\n--- [3] Configure Semester System (Call DaoTaoService) ---");
+                    System.out.println("\n--- [3] Quản lý Hệ thống Học Kỳ ---");
+                    daoTaoService.themHocKy(scanner);
                     break;
                 case "4":
-                    System.out.println("\n--- [4] Manage Personnel Profiles (Call NhanSuService) ---");
+                    System.out.println("\n--- [4] Quản lý Hồ sơ Nhân sự ---");
+                    System.out.println("1 - Thêm Giảng Viên | 2 - Thêm Sinh Viên");
+                    String nChoice = scanner.nextLine();
+                    if (nChoice.equals("1")) nhanSuService.themGiangVien(scanner);
+                    else if (nChoice.equals("2")) nhanSuService.themSinhVien(scanner);
                     break;
                 case "5":
-                    System.out.println("\n--- [5] Statistics on Students with Tuition Debt (Call HocPhiService) ---");
+                    System.out.println("\n--- [5] Thống kê SV Nợ Học Phí (Chức năng TV B) ---");
                     break;
                 case "6":
-                    System.out.println("\n--- [6] Tuition Revenue Report (Call HocPhiService) ---");
+                    System.out.println("\n--- [6] Báo cáo Doanh thu (Chức năng TV B) ---");
                     break;
                 case "0":
                     loggedInRole = null;
+                    loggedInUsername = null;
                     adminRunning = false;
-                    System.out.println("=> Logged out!");
+                    System.out.println("=> Đã đăng xuất!");
                     break;
                 default:
-                    System.out.println("Invalid selection, please select again!");
+                    System.out.println("Lựa chọn chưa đúng!");
             }
         }
     }
