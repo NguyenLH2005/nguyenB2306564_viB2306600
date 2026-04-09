@@ -29,10 +29,10 @@ public class Main {
         System.setProperty("file.encoding", "UTF-8");
         try {
             Connection conn = DBConnection.getConnection();
-            System.out.println("Database connection successful!");
+            System.out.println("Kết nối cơ sở dữ liệu thành công!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Warning: DB connection error. System will continue to open the Menu interface.");
+            System.out.println("Cảnh báo: Lỗi kết nối DB. Hệ thống sẽ tiếp tục mở giao diện Menu.");
         }
 
         while (running) {
@@ -52,7 +52,7 @@ public class Main {
                         menuAdmin();
                         break;
                     default:
-                        System.out.println("Permission error. The system will log out.");
+                        System.out.println("Lỗi quyền truy cập. Hệ thống sẽ đăng xuất.");
                         loggedInRole = null;
                 }
             }
@@ -62,19 +62,19 @@ public class Main {
 
     private static void hienThiDangNhap() {
         System.out.println("\n=============================================");
-        System.out.println("       STUDENT MANAGEMENT SYSTEM LOGIN       ");
+        System.out.println("       HỆ THỐNG QUẢN LÝ SINH VIÊN            ");
         System.out.println("=============================================");
-        System.out.println("Test hint: use 'sv', 'gv', 'admin', pass '123'");
-        System.out.print("Username (or type '0' to exit): ");
+        System.out.println("Gợi ý: dùng 'admin', mật khẩu 'admin123'");
+        System.out.print("Tên đăng nhập (hoặc gõ '0' để thoát): ");
         String username = scanner.nextLine();
 
         if (username.equals("0")) {
             running = false;
-            System.out.println("Program closed. Thank you for using the system!");
+            System.out.println("Đã đóng chương trình. Cảm ơn bạn đã sử dụng hệ thống!");
             return;
         }
 
-        System.out.print("Password: ");
+        System.out.print("Mật khẩu: ");
         String password = scanner.nextLine();
 
         Account acc = taiKhoanService.login(username, password);
@@ -92,16 +92,16 @@ public class Main {
     private static void menuSinhVien() {
         boolean svRunning = true;
         while (svRunning) {
-            System.out.println("\n================ STUDENT MENU ================");
-            System.out.println("1. Course Registration");
-            System.out.println("2. Cancel Course Registration");
-            System.out.println("3. Pay Tuition Fee");
-            System.out.println("4. View Transcripts & Calculate GPA");
-            System.out.println("5. Check Class Size");
-            System.out.println("6. Look up Personal Debt");
-            System.out.println("0. Logout");
+            System.out.println("\n================ MENU SINH VIÊN ================");
+            System.out.println("1. Đăng ký học phần");
+            System.out.println("2. Hủy đăng ký học phần");
+            System.out.println("3. Đóng tiền học phí");
+            System.out.println("4. Xem bảng điểm & Tính GPA");
+            System.out.println("5. Kiểm tra sĩ số lớp học phần");
+            System.out.println("6. Tra cứu công nợ cá nhân");
+            System.out.println("0. Đăng xuất");
             System.out.println("==============================================");
-            System.out.print("Select function (0-6): ");
+            System.out.print("Chọn chức năng (0-6): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
@@ -137,13 +137,13 @@ public class Main {
     private static void menuGiangVien() {
         boolean gvRunning = true;
         while (gvRunning) {
-            System.out.println("\n================ TEACHER MENU ================");
-            System.out.println("1. Class List for Grading");
-            System.out.println("2. Grade Management");
-            System.out.println("3. Training Quality Report");
-            System.out.println("0. Logout");
+            System.out.println("\n================ MENU GIẢNG VIÊN ================");
+            System.out.println("1. Danh sách lớp để nhập điểm");
+            System.out.println("2. Quản lý điểm số");
+            System.out.println("3. Báo cáo chất lượng đào tạo");
+            System.out.println("0. Đăng xuất");
             System.out.println("==============================================");
-            System.out.print("Select function (0-3): ");
+            System.out.print("Chọn chức năng (0-3): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
@@ -171,16 +171,16 @@ public class Main {
     private static void menuAdmin() {
         boolean adminRunning = true;
         while (adminRunning) {
-            System.out.println("\n================= ADMIN MENU =================");
-            System.out.println("1. Manage Academic Structure (Faculty, Major, Class)");
-            System.out.println("2. Manage Curriculum (Course)");
-            System.out.println("3. Configure Semester System (Semester, Unit Price)");
-            System.out.println("4. Manage Personnel Profiles (Teacher, Student)");
-            System.out.println("5. Statistics on Students with Tuition Debt");
-            System.out.println("6. Tuition Revenue Report");
-            System.out.println("0. Logout");
+            System.out.println("\n================= MENU ADMIN =================");
+            System.out.println("1. Quản lý cấu trúc đào tạo (Khoa, Ngành, Lớp)");
+            System.out.println("2. Quản lý khung chương trình (Môn học)");
+            System.out.println("3. Cấu hình hệ thống học kỳ");
+            System.out.println("4. Quản lý hồ sơ nhân sự (Giảng viên, Sinh viên)");
+            System.out.println("5. Thống kê sinh viên nợ học phí");
+            System.out.println("6. Báo cáo doanh thu học phí");
+            System.out.println("0. Đăng xuất");
             System.out.println("==============================================");
-            System.out.print("Select function (0-6): ");
+            System.out.print("Chọn chức năng (0-6): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
