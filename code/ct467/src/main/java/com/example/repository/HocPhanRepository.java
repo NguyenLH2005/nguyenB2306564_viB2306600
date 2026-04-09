@@ -4,9 +4,65 @@ import com.example.db.DBConnection;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class HocPhanRepository {
+
+
+    // Lấy học phần ở học kỳ gần đây nhất
+    public void hienThiHPHienTai() {
+        String sql_HocKy = "SELECT * FROM hoc_ky ORDER BY MaHocKy DESC LIMIT 1";
+        String sql_LHP = "SELECT * FROM lop_hoc_phan JOIN mon_hoc ON lop_hoc_phan.MaMon = mon_hoc.MaMon WHERE MaHocKy = ?";
+
+        try (Connection conn = DBConnection.getConnection()) {
+
+            String MaHK = null;
+
+            // Lấy học kỳ mới nhất
+            try (Statement stmt = conn.createStatement();
+                    ResultSet rsHK = stmt.executeQuery(sql_HocKy)) {
+
+                if (rsHK.next()) {
+                    MaHK = rsHK.getString("MaHocKy");
+                }
+            }
+
+            // Nếu không có học kỳ
+            if (MaHK == null) {
+                System.out.println("Không tìm thấy học kỳ.");
+                return;
+            }
+
+            // Lấy lớp học phần theo học kỳ
+            try (PreparedStatement pstmt = conn.prepareStatement(sql_LHP)) {
+                pstmt.setString(1, MaHK);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    boolean hasData = false;
+
+                    while (rs.next()) {
+                        hasData = true;
+                        System.out.printf("%-15s %-30s %-10s %-10s %-15d\n",
+                                rs.getString("MaLHP"),
+                                rs.getString("TenMon"),
+                                rs.getString("MaHocKy"),
+                                rs.getString("MaGV"),
+                                rs.getInt("SoLuongMax"));
+                    }
+
+                    if (!hasData) {
+                        System.out.println("Không có lớp học phần trong học kỳ này.");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Task 1
     public boolean dangKyHocPhan(String mssv, String maLHP) {

@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.repository.DiemRepository;
 import com.example.repository.HocPhanRepository;
 import java.util.Scanner;
 
@@ -19,8 +20,17 @@ public class HocPhanService {
     }
 
     public void thucHienDangKy(Scanner scanner, String mssv) {
+        repository.hienThiHPHienTai();
         System.out.print("Nhap ma Lop hoc phan muon dang ky: ");
         String maLHP = scanner.nextLine();
+
+        // Kiểm tra xem sinh viên đã đăng ký lớp học phần này chưa
+        if ((new DiemRepository()).kiemTraDaDangKy(mssv, maLHP)) {
+            System.out.println("=> Ban da dang ky hoc phan nay roi!");
+            return; // Dừng, không cho đăng ký tiếp
+        }
+
+        // Nếu chưa đăng ký thì tiến hành đăng ký
         if (repository.dangKyHocPhan(mssv, maLHP)) {
             System.out.println("=> Dang ky mon hoc thanh cong!");
         } else {
@@ -29,6 +39,7 @@ public class HocPhanService {
     }
 
     public void thucHienHuyDangKy(Scanner scanner, String mssv) {
+        (new DiemRepository()).hienThiHocPhanDaDangKyHienTai(mssv);
         System.out.print("Nhap ma Lop hoc phan muon huy dang ky: ");
         String maLHP = scanner.nextLine();
         if (repository.huyDangKyHocPhan(mssv, maLHP)) {
