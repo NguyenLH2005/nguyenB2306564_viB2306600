@@ -50,6 +50,7 @@ public class HocPhanService {
     }
 
     public void kiemTraSiSoLHP(Scanner scanner) {
+        (new HocPhanRepository()).layTatCaHocPhan();
         System.out.print("Nhap ma Lop hoc phan can kiem tra: ");
         String maLHP = scanner.nextLine();
         String result = repository.kiemTraSiSo(maLHP);

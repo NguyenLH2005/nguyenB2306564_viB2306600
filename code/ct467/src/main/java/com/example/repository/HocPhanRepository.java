@@ -10,59 +10,106 @@ import java.sql.Statement;
 
 public class HocPhanRepository {
 
+    public void layTatCaHocPhan() {
+        String sql = "SELECT * FROM lop_hoc_phan lhp JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon join giang_vien gv on lhp.MaGV = gv.MaGV";
+        try (Connection conn = DBConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                System.out.printf("%-15s | %-25s | %-10s | %-10s\n",
+                        rs.getString("MaLHP"),
+                        rs.getString("TenMon"),
+                        rs.getString("MaHocKy"),
+                        rs.getString("HoTen"));
+            }
+        } catch (Exception e) {
+            System.out.println("Loi lay danh sach hoc phan: " + e.getMessage());
+        }
+    }
 
     // Lấy học phần ở học kỳ gần đây nhất
     public void hienThiHPHienTai() {
-        String sql_HocKy = "SELECT * FROM hoc_ky ORDER BY MaHocKy DESC LIMIT 1";
-        String sql_LHP = "SELECT * FROM lop_hoc_phan JOIN mon_hoc ON lop_hoc_phan.MaMon = mon_hoc.MaMon WHERE MaHocKy = ?";
+        // Lấy học kỳ mới nhất
+        String sql_HocKy = "SELECT MaHocKy FROM hoc_ky ORDER BY MaHocKy DESC LIMIT 1";
+
+        // Cập nhật câu lệnh SQL: Gọi func_DemSiSo(MaLHP) và đặt tên cột kết quả là
+        // 'SiSo'
+        String sql_LHP = "SELECT lhp.MaLHP, mh.TenMon, lhp.MaHocKy, lhp.MaGV, lhp.SoLuongMax, "
+                + "func_DemSiSo(lhp.MaLHP) AS SiSo "
+                + "FROM lop_hoc_phan lhp "
+                + "JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon "
+                + "WHERE lhp.MaHocKy = ?";
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String MaHK = null;
+            String maHK = null;
 
-            // Lấy học kỳ mới nhất
+            // 1. Lấy học kỳ mới nhất
             try (Statement stmt = conn.createStatement();
                     ResultSet rsHK = stmt.executeQuery(sql_HocKy)) {
 
                 if (rsHK.next()) {
-                    MaHK = rsHK.getString("MaHocKy");
+                    maHK = rsHK.getString("MaHocKy");
                 }
             }
 
             // Nếu không có học kỳ
-            if (MaHK == null) {
+            if (maHK == null) {
                 System.out.println("Không tìm thấy học kỳ.");
                 return;
             }
 
-            // Lấy lớp học phần theo học kỳ
+            System.out.println("\n--- DANH SACH LOP HOC PHAN HOC KY HIEN TAI (" + maHK + ") ---");
+            // Thêm cột hiển thị Sĩ Số
+            System.out.printf("%-15s | %-25s | %-10s | %-10s | %-15s | %-10s\n",
+                    "Ma LHP", "Ten Mon", "Ma Hoc Ky", "Ma GV", "Si So (DK/Max)", "Con Trong");
+            System.out
+                    .println(
+                            "-----------------------------------------------------------------------------------------------------");
+
+            // 2. Lấy danh sách lớp học phần theo học kỳ
             try (PreparedStatement pstmt = conn.prepareStatement(sql_LHP)) {
-                pstmt.setString(1, MaHK);
+                pstmt.setString(1, maHK);
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     boolean hasData = false;
 
                     while (rs.next()) {
                         hasData = true;
-                        System.out.printf("%-15s %-30s %-10s %-10s %-15d\n",
+                        String siSoStr = rs.getString("SiSo");
+                        int conTrong = 0;
+                        if (siSoStr != null && siSoStr.contains("/")) {
+                            String[] parts = siSoStr.split("/");
+                            try {
+                                int daDangKy = Integer.parseInt(parts[0].trim());
+                                int toiDa = Integer.parseInt(parts[1].trim());
+                                conTrong = toiDa - daDangKy;
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        System.out.printf("%-15s | %-25s | %-10s | %-10s | %-15s | %-10d\n",
                                 rs.getString("MaLHP"),
                                 rs.getString("TenMon"),
                                 rs.getString("MaHocKy"),
                                 rs.getString("MaGV"),
-                                rs.getInt("SoLuongMax"));
+                                siSoStr,
+                                conTrong); // <--- In ra số lượng chỗ còn trống
                     }
 
                     if (!hasData) {
                         System.out.println("Không có lớp học phần trong học kỳ này.");
                     }
+                    System.out.println(
+                            "-----------------------------------------------------------------------------------------------------\n");
                 }
             }
 
         } catch (Exception e) {
+            System.out.println("Lỗi tải danh sách lớp học phần: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
 
     // Task 1
     public boolean dangKyHocPhan(String mssv, String maLHP) {

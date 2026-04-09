@@ -3,6 +3,7 @@ package com.example.repository;
 import com.example.db.DBConnection;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class HocPhiRepository {
@@ -27,14 +28,26 @@ public class HocPhiRepository {
         String sql = "{CALL sp_ThongKeSVNoHocPhi(?)}";
         try (Connection conn = DBConnection.getConnection();
                 CallableStatement cstmt = conn.prepareCall(sql)) {
+
             cstmt.setString(1, maHocKy);
+
             try (ResultSet rs = cstmt.executeQuery()) {
-                System.out.printf("%-10s %-25s %-15s %-20s %-15s %-15s %-15s\n", "MSSV", "Ho Ten", "Lop", "Nganh",
-                        "Tong Can Thu", "Da Dong", "Con No");
+
+                // Kiểm tra xem có dữ liệu không
+                if (!rs.next()) {
+                    System.out.println("Không có sinh viên nào nợ học phí trong học kỳ " + maHocKy);
+                    return;
+                }
+
+                // In tiêu đề (chỉ in khi có dữ liệu)
+                System.out.printf("%-10s | %-25s | %-10s | %-20s | %-15s | %-15s | %-15s\n",
+                        "MSSV", "Họ Tên", "Lớp", "Ngành", "Tổng Cần Thu", "Đã Đóng", "Còn Nợ");
                 System.out.println(
                         "-----------------------------------------------------------------------------------------------------------------------");
-                while (rs.next()) {
-                    System.out.printf("%-10s %-25s %-15s %-20s %-15.0f %-15.0f %-15.0f\n",
+
+                // Dùng do-while để không bỏ sót sinh viên đầu tiên
+                do {
+                    System.out.printf("%-10s | %-25s | %-10s | %-20s | %-15.0f | %-15.0f | %-15.0f\n",
                             rs.getString("MSSV"),
                             rs.getString("HoTen"),
                             rs.getString("TenLop"),
@@ -42,10 +55,13 @@ public class HocPhiRepository {
                             rs.getFloat("TongTien"),
                             rs.getFloat("DaDong"),
                             rs.getFloat("TienNo"));
-                }
+                } while (rs.next());
+
+                System.out.println(
+                        "-----------------------------------------------------------------------------------------------------------------------");
             }
         } catch (Exception e) {
-            System.out.println("Loi thong ke: " + e.getMessage());
+            System.out.println("Lỗi thống kê: " + e.getMessage());
         }
     }
 
@@ -73,4 +89,72 @@ public class HocPhiRepository {
             System.out.println("Loi bao cao doanh thu: " + e.getMessage());
         }
     }
+
+    public boolean hienThiHocPhiConNo(String mssv) {
+        // Truy vấn các khoản học phí của sinh viên mà trạng thái KHÔNG PHẢI là 'Đã hoàn
+        // tất'
+        // Bạn có thể sửa tên bảng 'hoc_phi' cho khớp với CSDL thực tế
+        String sql = "SELECT MaHocKy, TongTien, DaDong, TrangThai FROM hoc_phi "
+                + "WHERE MSSV = ? AND TrangThai != 'Đã hoàn tất'";
+
+        boolean coNo = false; // Biến kiểm tra xem sinh viên có nợ không
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, mssv);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                System.out.println("\n--- CAC KY CON NO HOC PHI ---");
+                System.out.printf("%-15s | %-15s | %-15s | %-15s\n", "Ma Hoc Ky", "Tong Tien", "Da Dong", "Trang Thai");
+                System.out.println("---------------------------------------------------------------------");
+
+                while (rs.next()) {
+                    coNo = true;
+                    String maHK = rs.getString("MaHocKy");
+                    float tongTien = rs.getFloat("TongTien");
+                    float daDong = rs.getFloat("DaDong");
+                    String trangThai = rs.getString("TrangThai");
+
+                    // In ra dạng số nguyên (không có phần thập phân) cho dễ nhìn
+                    System.out.printf("%-15s | %-15.0f | %-15.0f | %-15s\n", maHK, tongTien, daDong, trangThai);
+                }
+
+                if (!coNo) {
+                    System.out.println("Ban khong co khoan no hoc phi nao.");
+                }
+                System.out.println("---------------------------------------------------------------------\n");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Loi hien thi hoc phi: " + e.getMessage());
+        }
+
+        return coNo; // Tra ve true neu co no, false neu khong
+    }
+
+    public float getTienConNo(String maHocPhi) {
+        String sql = "SELECT TongTien, DaDong FROM hoc_phi WHERE MaHocPhi = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, maHocPhi);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    float tongTien = rs.getFloat("TongTien");
+                    float daDong = rs.getFloat("DaDong");
+                    return tongTien - daDong; // Trả về số tiền còn nợ
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lấy thông tin học phí: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Trả về -1 nếu không tìm thấy mã học phí trong CSDL
+        return -1f;
+    }
+
 }
