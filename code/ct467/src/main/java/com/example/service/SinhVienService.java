@@ -12,25 +12,25 @@ public class SinhVienService {
 
     // Task 4
     public void xemBangDiemVaGPA(String mssv) {
-        System.out.println("\nBẢNG ĐIỂM CHI TIẾT");
+        System.out.println("\nBANG DIEM CHI TIET");
         repository.xemBangDiem(mssv);
 
         float gpa = repository.tinhGPA(mssv);
         if (gpa != -1) {
-            System.out.printf("\n=> ĐIỂM TRUNG BÌNH TÍCH LŨY (GPA): %.2f\n", gpa);
+            System.out.printf("\n=> DIEM TRUNG BINH TICH LUY (GPA): %.2f\n", gpa);
         }
     }
 
     // Task 6
     public void traCuuCongNoCaNhan(Scanner scanner, String mssv) {
-        System.out.print("Nhập mã Học kỳ cần tra cứu công nợ (VD: HK1_2425): ");
+        System.out.print("Nhap ma Hoc ky can tra cuu cong no (VD: HK1_2425): ");
         String maHocKy = scanner.nextLine();
 
         float congNo = repository.traCuuCongNo(mssv, maHocKy);
         if (congNo != -1) {
-            System.out.printf("=> TỔNG SỐ TIỀN CÒN NỢ TRONG HỌC KỲ LÀ: %.0f VNĐ\n", congNo);
+            System.out.printf("=> TONG SO TIEN CON NO TRONG HOC KY LA: %.0f VND\n", congNo);
         } else {
-            System.out.println("=> Không tìm thấy thông tin công nợ hoặc có lỗi xảy ra.");
+            System.out.println("=> Khong tim thay thong tin cong no hoac co loi xay ra.");
         }
     }
 }

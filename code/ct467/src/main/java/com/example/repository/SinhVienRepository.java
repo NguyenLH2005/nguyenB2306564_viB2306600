@@ -17,7 +17,7 @@ public class SinhVienRepository {
             cstmt.execute();
             return cstmt.getFloat(1);
         } catch (Exception e) {
-            System.out.println("Lỗi tính GPA: " + e.getMessage());
+            System.out.println("Loi tinh GPA: " + e.getMessage());
             return -1;
         }
     }
@@ -33,11 +33,11 @@ public class SinhVienRepository {
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, mssv);
             try (ResultSet rs = pstmt.executeQuery()) {
-                System.out.printf("%-20s %-30s %-10s %-10s\n", "Mã LHP", "Tên Môn", "Số TC", "Điểm");
+                System.out.printf("%-20s %-30s %-10s %-10s\n", "Ma LHP", "Ten Mon", "So TC", "Diem");
                 System.out.println("--------------------------------------------------------------------------------");
                 while (rs.next()) {
                     float diem = rs.getFloat("Diem");
-                    String diemStr = rs.wasNull() ? "Chưa có" : String.valueOf(diem);
+                    String diemStr = rs.wasNull() ? "Chua co" : String.valueOf(diem);
                     System.out.printf("%-20s %-30s %-10d %-10s\n",
                             rs.getString("MaLHP"),
                             rs.getString("TenMon"),
@@ -46,7 +46,7 @@ public class SinhVienRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Lỗi xem bảng điểm: " + e.getMessage());
+            System.out.println("Loi xem bang diem: " + e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class SinhVienRepository {
             cstmt.execute();
             return cstmt.getFloat(1);
         } catch (Exception e) {
-            System.out.println("Lỗi tra cứu công nợ: " + e.getMessage());
+            System.out.println("Loi tra cuu cong no: " + e.getMessage());
             return -1;
         }
     }

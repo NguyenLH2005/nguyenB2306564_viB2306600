@@ -31,10 +31,10 @@ public class Main {
         System.setProperty("file.encoding", "UTF-8");
         try {
             Connection conn = DBConnection.getConnection();
-            System.out.println("Database connection successful!");
+            System.out.println("Ket noi co so du lieu thanh cong!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Warning: DB connection error. System will continue to open the Menu interface.");
+            System.out.println("Canh bao: Loi ket noi DB. He thong se tiep tuc mo giao dien Menu.");
         }
 
         while (running) {
@@ -54,7 +54,7 @@ public class Main {
                         menuAdmin();
                         break;
                     default:
-                        System.out.println("Permission error. The system will log out.");
+                        System.out.println("Loi quyen quyen truy cap. He thong se dang xuat.");
                         loggedInRole = null;
                 }
             }
@@ -64,28 +64,28 @@ public class Main {
 
     private static void hienThiDangNhap() {
         System.out.println("\n=============================================");
-        System.out.println("       STUDENT MANAGEMENT SYSTEM LOGIN       ");
+        System.out.println("       HE THONG QUAN LY SINH VIEN            ");
         System.out.println("=============================================");
-        System.out.println("Test hint: use 'sv', 'gv', 'admin', pass '123'");
-        System.out.print("Username (or type '0' to exit): ");
+        System.out.println("Goi y: dung 'sv', 'gv', 'admin', pass '123'");
+        System.out.print("Ten dang nhap (hoac go '0' de thoat): ");
         String username = scanner.nextLine();
 
         if (username.equals("0")) {
             running = false;
-            System.out.println("Program closed. Thank you for using the system!");
+            System.out.println("Da dong chuong trinh. Cam on ban da su dung he thong!");
             return;
         }
 
-        System.out.print("Password: ");
+        System.out.print("Mat khau: ");
         String password = scanner.nextLine();
 
         Account acc = taiKhoanService.login(username, password);
         if (acc != null) {
             loggedInRole = acc.getMaLoaiTK();
             loggedInUsername = acc.getUsername();
-            System.out.println("=> Đăng nhập thành công! Quyền: " + loggedInRole);
+            System.out.println("=> Dang nhap thanh cong! Quyen: " + loggedInRole);
         } else {
-            System.out.println("=> Sai tài khoản hoặc mật khẩu! Vui lòng thử lại.");
+            System.out.println("=> Sai tai khoan hoac mat khau! Vui long thu lai.");
         }
     }
 
@@ -94,16 +94,16 @@ public class Main {
     private static void menuSinhVien() {
         boolean svRunning = true;
         while (svRunning) {
-            System.out.println("\n================ STUDENT MENU ================");
-            System.out.println("1. Course Registration");
-            System.out.println("2. Cancel Course Registration");
-            System.out.println("3. Pay Tuition Fee");
-            System.out.println("4. View Transcripts & Calculate GPA");
-            System.out.println("5. Check Class Size");
-            System.out.println("6. Look up Personal Debt");
-            System.out.println("0. Logout");
+            System.out.println("\n================ MENU SINH VIEN ================");
+            System.out.println("1. Dang ky hoc phan");
+            System.out.println("2. Huy dang ky hoc phan");
+            System.out.println("3. Dong tien hoc phi");
+            System.out.println("4. Xem bang diem & Tinh GPA");
+            System.out.println("5. Kiem tra si so lop");
+            System.out.println("6. Tra cuu cong no ca nhan");
+            System.out.println("0. Dang xuat");
             System.out.println("==============================================");
-            System.out.print("Select function (0-6): ");
+            System.out.print("Chon chuc nang (0-6): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
@@ -128,10 +128,10 @@ public class Main {
                 case "0":
                     loggedInRole = null;
                     svRunning = false;
-                    System.out.println("=> Logged out!");
+                    System.out.println("=> Da dang xuat!");
                     break;
                 default:
-                    System.out.println("Invalid selection, please select again!");
+                    System.out.println("Lua chon khong hop le, vui long chon lai!");
             }
         }
     }
@@ -139,13 +139,13 @@ public class Main {
     private static void menuGiangVien() {
         boolean gvRunning = true;
         while (gvRunning) {
-            System.out.println("\n================ TEACHER MENU ================");
-            System.out.println("1. Class List for Grading");
-            System.out.println("2. Grade Management");
-            System.out.println("3. Training Quality Report");
-            System.out.println("0. Logout");
+            System.out.println("\n================ MENU GIANG VIEN ================");
+            System.out.println("1. Danh sach lop de nhap diem");
+            System.out.println("2. Quan ly diem so");
+            System.out.println("3. Bao cao chat luong dao tao");
+            System.out.println("0. Dang xuat");
             System.out.println("==============================================");
-            System.out.print("Select function (0-3): ");
+            System.out.print("Chon chuc nang (0-3): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
@@ -162,10 +162,10 @@ public class Main {
                     loggedInRole = null;
                     loggedInUsername = null;
                     gvRunning = false;
-                    System.out.println("=> Đã đăng xuất!");
+                    System.out.println("=> Da dang xuat!");
                     break;
                 default:
-                    System.out.println("Lựa chọn chưa đúng!");
+                    System.out.println("Lua chon chua dung!");
             }
         }
     }
@@ -173,39 +173,30 @@ public class Main {
     private static void menuAdmin() {
         boolean adminRunning = true;
         while (adminRunning) {
-            System.out.println("\n================= ADMIN MENU =================");
-            System.out.println("1. Manage Academic Structure (Faculty, Major, Class)");
-            System.out.println("2. Manage Curriculum (Course)");
-            System.out.println("3. Configure Semester System (Semester, Unit Price)");
-            System.out.println("4. Manage Personnel Profiles (Teacher, Student)");
-            System.out.println("5. Statistics on Students with Tuition Debt");
-            System.out.println("6. Tuition Revenue Report");
-            System.out.println("0. Logout");
+            System.out.println("\n================= MENU ADMIN =================");
+            System.out.println("1. Quan ly cau truc dao tao (Khoa, Nganh, Lop)");
+            System.out.println("2. Quan ly khung chuong trinh (Mon hoc)");
+            System.out.println("3. Cau hinh he thong hoc ky (Hoc ky, Don gia)");
+            System.out.println("4. Quan ly ho so nhan su (Giang vien, Sinh vien)");
+            System.out.println("5. Thong ke sinh vien no hoc phi");
+            System.out.println("6. Bao cao doanh thu hoc phi");
+            System.out.println("0. Dang xuat");
             System.out.println("==============================================");
-            System.out.print("Select function (0-6): ");
+            System.out.print("Chon chuc nang (0-6): ");
             String choice = scanner.nextLine();
 
             switch (choice) {
                 case "1":
-                    System.out.println("\n--- [1] Quản lý Khoa ---");
-                    daoTaoService.themKhoaMoi(scanner);
+                    daoTaoService.menuQuanLyCauTruc(scanner);
                     break;
                 case "2":
-                    System.out.println("\n--- [2] Quản lý Môn Học ---");
-                    daoTaoService.themMonHoc(scanner);
+                    daoTaoService.menuQuanLyMonHoc(scanner);
                     break;
                 case "3":
-                    System.out.println("\n--- [3] Quản lý Hệ thống Học Kỳ ---");
-                    daoTaoService.themHocKy(scanner);
+                    daoTaoService.menuQuanLyHocKy(scanner);
                     break;
                 case "4":
-                    System.out.println("\n--- [4] Quản lý Hồ sơ Nhân sự ---");
-                    System.out.println("1 - Thêm Giảng Viên | 2 - Thêm Sinh Viên");
-                    String nChoice = scanner.nextLine();
-                    if (nChoice.equals("1"))
-                        nhanSuService.themGiangVien(scanner);
-                    else if (nChoice.equals("2"))
-                        nhanSuService.themSinhVien(scanner);
+                    nhanSuService.menuQuanLyNhanSu(scanner);
                     break;
                 case "5":
                     hocPhiService.xemThongKeNoHocPhi(scanner);
@@ -217,10 +208,10 @@ public class Main {
                     loggedInRole = null;
                     loggedInUsername = null;
                     adminRunning = false;
-                    System.out.println("=> Đã đăng xuất!");
+                    System.out.println("=> Da dang xuat!");
                     break;
                 default:
-                    System.out.println("Lựa chọn chưa đúng!");
+                    System.out.println("Lua chon chua dung!");
             }
         }
     }

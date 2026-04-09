@@ -17,7 +17,7 @@ public class HocPhiRepository {
             cstmt.execute();
             return true;
         } catch (Exception e) {
-            System.out.println("Lỗi đóng học phí: " + e.getMessage());
+            System.out.println("Loi dong hoc phi: " + e.getMessage());
             return false;
         }
     }
@@ -29,8 +29,8 @@ public class HocPhiRepository {
                 CallableStatement cstmt = conn.prepareCall(sql)) {
             cstmt.setString(1, maHocKy);
             try (ResultSet rs = cstmt.executeQuery()) {
-                System.out.printf("%-10s %-25s %-15s %-20s %-15s %-15s %-15s\n", "MSSV", "Họ Tên", "Lớp", "Ngành",
-                        "Tổng Cần Thu", "Đã Đóng", "Còn Nợ");
+                System.out.printf("%-10s %-25s %-15s %-20s %-15s %-15s %-15s\n", "MSSV", "Ho Ten", "Lop", "Nganh",
+                        "Tong Can Thu", "Da Dong", "Con No");
                 System.out.println(
                         "-----------------------------------------------------------------------------------------------------------------------");
                 while (rs.next()) {
@@ -45,7 +45,7 @@ public class HocPhiRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Lỗi thống kê: " + e.getMessage());
+            System.out.println("Loi thong ke: " + e.getMessage());
         }
     }
 
@@ -56,8 +56,8 @@ public class HocPhiRepository {
                 CallableStatement cstmt = conn.prepareCall(sql)) {
             cstmt.setString(1, maHocKy);
             try (ResultSet rs = cstmt.executeQuery()) {
-                System.out.printf("%-10s %-30s %-20s %-20s %-20s\n", "Mã Khoa", "Tên Khoa", "Tổng Phải Thu", "Thực Thu",
-                        "Còn Nợ");
+                System.out.printf("%-10s %-30s %-20s %-20s %-20s\n", "Ma Khoa", "Ten Khoa", "Tong Phai Thu", "Thuc Thu",
+                        "Con No");
                 System.out.println(
                         "-----------------------------------------------------------------------------------------------------------");
                 while (rs.next()) {
@@ -70,7 +70,7 @@ public class HocPhiRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Lỗi báo cáo doanh thu: " + e.getMessage());
+            System.out.println("Loi bao cao doanh thu: " + e.getMessage());
         }
     }
 }

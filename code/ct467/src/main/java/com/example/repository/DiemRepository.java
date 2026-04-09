@@ -13,7 +13,7 @@ public class DiemRepository {
     public void baoCaoChatLuongLHP(String maLHP) {
         String sql = "{CALL sp_BaoCaoChatLuong_LHP(?)}";
         System.out.println("---------------------------------------------------------------");
-        System.out.printf("%-15s %-15s %-15s %-15s\n", "Tổng Sĩ Số", "Số Lượng Đậu", "Số Lượng Rớt", "Điểm Cao Nhất");
+        System.out.printf("%-15s %-15s %-15s %-15s\n", "Tong Si So", "So Luong Dau", "So Luong Rot", "Diem Cao Nhat");
         System.out.println("---------------------------------------------------------------");
         try (Connection conn = DBConnection.getConnection();
              CallableStatement cstmt = conn.prepareCall(sql)) {

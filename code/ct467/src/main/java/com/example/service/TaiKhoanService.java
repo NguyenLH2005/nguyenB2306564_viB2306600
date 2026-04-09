@@ -12,7 +12,7 @@ public class TaiKhoanService {
 
     public Account login(String username, String password) {
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            System.out.println("Lỗi: Tài khoản và mật khẩu không được để trống!");
+            System.out.println("Loi: Tai khoan va mat khau khong duoc de trong!");
             return null;
         }
         return repository.authenticate(username, password);

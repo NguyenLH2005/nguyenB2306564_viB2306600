@@ -18,7 +18,7 @@ public class HocPhanRepository {
             cstmt.execute();
             return true;
         } catch (Exception e) {
-            System.out.println("Lỗi đăng ký: " + e.getMessage());
+            System.out.println("Loi dang ky: " + e.getMessage());
             return false;
         }
     }
@@ -33,7 +33,7 @@ public class HocPhanRepository {
             cstmt.execute();
             return true;
         } catch (Exception e) {
-            System.out.println("Lỗi hủy đăng ký: " + e.getMessage());
+            System.out.println("Loi huy dang ky: " + e.getMessage());
             return false;
         }
     }
@@ -48,15 +48,15 @@ public class HocPhanRepository {
             cstmt.execute();
             return cstmt.getString(1);
         } catch (Exception e) {
-            System.out.println("Lỗi hàm đếm sĩ số: " + e.getMessage());
-            return "Lỗi";
+            System.out.println("Loi ham dem si so: " + e.getMessage());
+            return "Loi";
         }
     }
 
     // Task 9
     public void xuatDanhSachLHP(String maGV, String maHocKy) {
         String sql = "{CALL sp_DanhSachLHP_GiangVien(?, ?)}";
-        System.out.printf("%-15s %-30s %-10s %-10s %-15s\n", "Mã LHP", "Tên Môn", "Số TC", "Tối Đa", "Đã Đăng Ký");
+        System.out.printf("%-15s %-30s %-10s %-10s %-15s\n", "Ma LHP", "Ten Mon", "So TC", "Toi Da", "Da Dang Ky");
         System.out.println("--------------------------------------------------------------------------------");
         try (Connection conn = DBConnection.getConnection();
                 CallableStatement cstmt = conn.prepareCall(sql)) {
@@ -75,7 +75,7 @@ public class HocPhanRepository {
                             rs.getInt("SL_DaDangKy"));
                 }
                 if (!hasData) {
-                    System.out.println("Không tìm thấy lớp học phần nào do bạn giảng dạy trong học kỳ này.");
+                    System.out.println("Khong tim thay lop hoc phan nao do ban giang day trong hoc ky nay.");
                 }
             }
         } catch (Exception e) {

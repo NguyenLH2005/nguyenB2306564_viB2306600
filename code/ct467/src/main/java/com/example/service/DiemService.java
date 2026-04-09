@@ -12,30 +12,30 @@ public class DiemService {
     }
 
     public void xuatBaoCaoChatLuong(Scanner scanner) {
-        System.out.print("Nhập mã Lớp học phần cần báo cáo: ");
+        System.out.print("Nhap ma Lop hoc phan can bao cao: ");
         String maLHP = scanner.nextLine();
         
-        System.out.println("\nBÁO CÁO CHẤT LƯỢNG ĐÀO TẠO - MÃ LỚP: " + maLHP);
+        System.out.println("\nBAO CAO CHAT LUONG DAO TAO - MA LOP: " + maLHP);
         repository.baoCaoChatLuongLHP(maLHP);
     }
 
     public void thucHienNhapDiem(Scanner scanner) {
-        System.out.print("Nhập mã Lớp học phần: ");
+        System.out.print("Nhap ma Lop hoc phan: ");
         String maLHP = scanner.nextLine();
-        System.out.print("Nhập MSSV sinh viên cần chấm điểm: ");
+        System.out.print("Nhap MSSV sinh vien can cham diem: ");
         String mssv = scanner.nextLine();
-        System.out.print("Nhập điểm (0.0 - 10.0): ");
+        System.out.print("Nhap diem (0.0 - 10.0): ");
         float diem = Float.parseFloat(scanner.nextLine());
         
         if (diem < 0 || diem > 10) {
-            System.out.println("=> Điểm không hợp lệ!");
+            System.out.println("=> Diem khong hop le!");
             return;
         }
 
         if (repository.nhapDiem(mssv, maLHP, diem)) {
-            System.out.println("=> Nhập/Cập nhật điểm thành công cho SV: " + mssv);
+            System.out.println("=> Nhap/Cap nhat diem thanh cong cho SV: " + mssv);
         } else {
-            System.out.println("=> Nhập điểm thất bại. Vui lòng kiểm tra lại MSSV hoặc Mã LHP.");
+            System.out.println("=> Nhap diem that bai. Vui long kiem tra lai MSSV hoac Ma LHP.");
         }
     }
 }

@@ -11,41 +11,41 @@ public class HocPhanService {
     }
 
     public void xemDanhSachLopGiangDay(Scanner scanner, String maGV) {
-        System.out.print("Nhập mã học kỳ (VD: HK1_2425): ");
+        System.out.print("Nhap ma hoc ky (VD: HK1_2425): ");
         String maHocKy = scanner.nextLine();
 
-        System.out.println("\nDANH SÁCH LỚP HỌC PHẦN ĐANG GIẢNG DẠY");
+        System.out.println("\nDANH SACH LOP HOC PHAN DANG GIANG DAY");
         repository.xuatDanhSachLHP(maGV, maHocKy);
     }
 
     public void thucHienDangKy(Scanner scanner, String mssv) {
-        System.out.print("Nhập mã Lớp học phần muốn đăng ký: ");
+        System.out.print("Nhap ma Lop hoc phan muon dang ky: ");
         String maLHP = scanner.nextLine();
         if (repository.dangKyHocPhan(mssv, maLHP)) {
-            System.out.println("=> Đăng ký môn học thành công!");
+            System.out.println("=> Dang ky mon hoc thanh cong!");
         } else {
-            System.out.println("=> Đăng ký thất bại. Vui lòng kiểm tra lại điều kiện tiên quyết hoặc giới hạn lớp.");
+            System.out.println("=> Dang ky that bai. Vui long kiem tra lai dieu kien tien quyet hoac gioi han lop.");
         }
     }
 
     public void thucHienHuyDangKy(Scanner scanner, String mssv) {
-        System.out.print("Nhập mã Lớp học phần muốn hủy đăng ký: ");
+        System.out.print("Nhap ma Lop hoc phan muon huy dang ky: ");
         String maLHP = scanner.nextLine();
         if (repository.huyDangKyHocPhan(mssv, maLHP)) {
-            System.out.println("=> Hủy đăng ký môn học thành công!");
+            System.out.println("=> Huy dang ky mon hoc thanh cong!");
         } else {
-            System.out.println("=> Hủy đăng ký thất bại.");
+            System.out.println("=> Huy dang ky that bai.");
         }
     }
 
     public void kiemTraSiSoLHP(Scanner scanner) {
-        System.out.print("Nhập mã Lớp học phần cần kiểm tra: ");
+        System.out.print("Nhap ma Lop hoc phan can kiem tra: ");
         String maLHP = scanner.nextLine();
         String result = repository.kiemTraSiSo(maLHP);
         if (!"Lỗi".equals(result)) {
-            System.out.println("Sĩ số hiện tại (Đã đăng ký / Tối đa): " + result);
+            System.out.println("Si so hien tai (Da dang ky / Toi da): " + result);
         } else {
-            System.out.println("Không thể kiểm tra sĩ số (Sai mã LHP hoặc lỗi hệ thống).");
+            System.out.println("Khong the kiem tra si so (Sai ma LHP hoac loi he thong).");
         }
     }
 }
