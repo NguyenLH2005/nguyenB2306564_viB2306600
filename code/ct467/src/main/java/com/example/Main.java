@@ -68,7 +68,7 @@ public class Main {
         System.out.println("=============================================");
         System.out.println("Goi y: dung 'sv', 'gv', 'admin', pass '123'");
         System.out.print("Ten dang nhap (hoac go '0' de thoat): ");
-        String username = scanner.nextLine();
+        String username = scanner.nextLine().trim();
 
         if (username.equals("0")) {
             running = false;
@@ -77,7 +77,7 @@ public class Main {
         }
 
         System.out.print("Mat khau: ");
-        String password = scanner.nextLine();
+        String password = scanner.nextLine().trim();
 
         Account acc = taiKhoanService.login(username, password);
         if (acc != null) {
@@ -99,12 +99,12 @@ public class Main {
             System.out.println("2. Huy dang ky hoc phan");
             System.out.println("3. Dong tien hoc phi");
             System.out.println("4. Xem bang diem & Tinh GPA");
-            System.out.println("5. Kiem tra si so lop");
+            System.out.println("5. Xem va dang ky hoc lai");
             System.out.println("6. Tra cuu cong no ca nhan");
             System.out.println("0. Dang xuat");
             System.out.println("==============================================");
             System.out.print("Chon chuc nang (0-6): ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -120,7 +120,7 @@ public class Main {
                     sinhVienService.xemBangDiemVaGPA(loggedInUsername);
                     break;
                 case "5":
-                    hocPhanService.kiemTraSiSoLHP(scanner);
+                    hocPhanService.thucHienHocLai(scanner, loggedInUsername);
                     break;
                 case "6":
                     sinhVienService.traCuuCongNoCaNhan(scanner, loggedInUsername);
@@ -146,7 +146,7 @@ public class Main {
             System.out.println("0. Dang xuat");
             System.out.println("==============================================");
             System.out.print("Chon chuc nang (0-3): ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -178,12 +178,13 @@ public class Main {
             System.out.println("2. Quan ly khung chuong trinh (Mon hoc)");
             System.out.println("3. Cau hinh he thong hoc ky (Hoc ky, Don gia)");
             System.out.println("4. Quan ly ho so nhan su (Giang vien, Sinh vien)");
-            System.out.println("5. Thong ke sinh vien no hoc phi");
-            System.out.println("6. Bao cao doanh thu hoc phi");
+            System.out.println("5. Quan ly lop hoc phan");
+            System.out.println("6. Thong ke sinh vien no hoc phi");
+            System.out.println("7. Bao cao doanh thu hoc phi");
             System.out.println("0. Dang xuat");
             System.out.println("==============================================");
             System.out.print("Chon chuc nang (0-6): ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -199,9 +200,12 @@ public class Main {
                     nhanSuService.menuQuanLyNhanSu(scanner);
                     break;
                 case "5":
-                    hocPhiService.xemThongKeNoHocPhi(scanner);
+                    hocPhanService.menuQuanLyLopHocPhan(scanner);
                     break;
                 case "6":
+                    hocPhiService.xemThongKeNoHocPhi(scanner);
+                    break;
+                case "7":
                     hocPhiService.xemBaoCaoDoanhThu(scanner);
                     break;
                 case "0":

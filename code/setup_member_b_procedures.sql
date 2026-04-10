@@ -74,6 +74,8 @@ END$$
 -- ==============================================================================
 -- 6. [TASK 4] STORED FUNCTION: TÍNH GPA (THÀNH VIÊN B)
 -- ==============================================================================
+DELIMITER $$
+
 DROP FUNCTION IF EXISTS func_TinhGPA$$
 
 CREATE FUNCTION func_TinhGPA(p_MSSV VARCHAR(10)) 
@@ -82,23 +84,44 @@ DETERMINISTIC
 BEGIN
     DECLARE v_GPA FLOAT DEFAULT 0;
     DECLARE v_TongTinChi INT DEFAULT 0;
-    DECLARE v_TongDiem FLOAT DEFAULT 0;
+    DECLARE v_TongDiemThang4 FLOAT DEFAULT 0;
 
+    -- Lấy tổng điểm hệ 4 và tổng tín chỉ
     SELECT 
-        SUM(d.Diem * mh.SoTinChi), 
-        SUM(CASE WHEN d.Diem IS NOT NULL THEN mh.SoTinChi ELSE 0 END)
-        INTO v_TongDiem, v_TongTinChi
-    FROM DIEM d
-    JOIN LOP_HOC_PHAN lhp ON d.MaLHP = lhp.MaLHP
-    JOIN MON_HOC mh ON lhp.MaMon = mh.MaMon
-    WHERE d.MSSV = p_MSSV AND d.Diem IS NOT NULL;
+        SUM(
+            (CASE 
+                WHEN t.MaxDiem < 4.0 THEN 0.0
+                WHEN t.MaxDiem >= 4.0 AND t.MaxDiem < 5.0 THEN 1.0
+                WHEN t.MaxDiem >= 5.0 AND t.MaxDiem < 6.0 THEN 1.5
+                WHEN t.MaxDiem >= 6.0 AND t.MaxDiem < 6.5 THEN 2.0
+                WHEN t.MaxDiem >= 6.5 AND t.MaxDiem < 7.0 THEN 2.5
+                WHEN t.MaxDiem >= 7.0 AND t.MaxDiem < 8.0 THEN 3.0
+                WHEN t.MaxDiem >= 8.0 AND t.MaxDiem < 9.0 THEN 3.5
+                WHEN t.MaxDiem >= 9.0 AND t.MaxDiem <= 10.0 THEN 4.0
+                ELSE 0.0
+            END) * mh.SoTinChi
+        ), 
+        SUM(mh.SoTinChi)
+        INTO v_TongDiemThang4, v_TongTinChi
+    FROM (
+        -- BƯỚC 1: Tìm điểm cao nhất (hệ 10) của từng môn học
+        SELECT lhp.MaMon, MAX(d.Diem) AS MaxDiem
+        FROM diem d
+        JOIN lop_hoc_phan lhp ON d.MaLHP = lhp.MaLHP
+        WHERE d.MSSV = p_MSSV AND d.Diem IS NOT NULL
+        GROUP BY lhp.MaMon
+    ) AS t
+    JOIN mon_hoc mh ON t.MaMon = mh.MaMon;
 
+    -- BƯỚC 2: Chia trung bình
     IF v_TongTinChi IS NOT NULL AND v_TongTinChi > 0 THEN
-        SET v_GPA = ROUND(v_TongDiem / v_TongTinChi, 2);
+        SET v_GPA = ROUND(v_TongDiemThang4 / v_TongTinChi, 2);
     END IF;
 
     RETURN v_GPA;
 END$$
+
+DELIMITER ;
 
 -- ==============================================================================
 -- 7. [TASK 5] STORED FUNCTION: KIỂM TRA SĨ SỐ LỚP HỌC PHẦN (THÀNH VIÊN B)
@@ -190,6 +213,35 @@ BEGIN
     LEFT JOIN SINH_VIEN sv ON l.MaLop = sv.MaLop
     LEFT JOIN HOC_PHI hp ON sv.MSSV = hp.MSSV AND hp.MaHocKy = p_MaHocKy
     GROUP BY k.MaKhoa, k.TenKhoa;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS func_TinChiHocLai$$
+
+CREATE FUNCTION func_TinChiHocLai(p_MSSV VARCHAR(10)) 
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE v_TongTinChiHocLai INT DEFAULT 0;
+
+    -- Tính tổng số tín chỉ của các môn học mà sinh viên chưa từng đậu (>= 4.0) và không đang học (NULL)
+    SELECT IFNULL(SUM(mh.SoTinChi), 0)
+    INTO v_TongTinChiHocLai
+    FROM mon_hoc mh
+    WHERE mh.MaMon IN (
+        SELECT lhp.MaMon
+        FROM diem d
+        JOIN lop_hoc_phan lhp ON d.MaLHP = lhp.MaLHP
+        WHERE d.MSSV = p_MSSV
+        GROUP BY lhp.MaMon
+        HAVING MAX(IFNULL(d.Diem, 4.0)) < 4.0
+    );
+
+    RETURN v_TongTinChiHocLai;
 END$$
 
 DELIMITER ;

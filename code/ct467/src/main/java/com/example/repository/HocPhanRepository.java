@@ -10,6 +10,100 @@ import java.sql.Statement;
 
 public class HocPhanRepository {
 
+    public void themHocPhan(String MaLHP, String MaMon, String MaHocKy, String MaGV, int SoLuongMax) {
+        String sql = "INSERT INTO lop_hoc_phan (MaLHP, MaMon, MaHocKy, MaGV, SoLuongMax) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, MaLHP);
+            pstmt.setString(2, MaMon);
+            pstmt.setString(3, MaHocKy);
+            pstmt.setString(4, MaGV);
+            pstmt.setInt(5, SoLuongMax);
+            pstmt.executeUpdate();
+            System.out.println("Them lop hoc phan thanh cong!");
+        } catch (Exception e) {
+            System.out.println("Loi them lop hoc phan: " + e.getMessage());
+        }
+    }
+
+    public void suaHocPhan(String MaLHP, String MaMon, String MaHocKy, String MaGV, int SoLuongMax) {
+        String sql = "UPDATE lop_hoc_phan SET MaMon = ?, MaHocKy = ?, MaGV = ?, SoLuongMax = ? WHERE MaLHP = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, MaMon);
+            pstmt.setString(2, MaHocKy);
+            pstmt.setString(3, MaGV);
+            pstmt.setInt(4, SoLuongMax);
+            pstmt.setString(5, MaLHP);
+            pstmt.executeUpdate();
+            System.out.println("Sua lop hoc phan thanh cong!");
+        } catch (Exception e) {
+            System.out.println("Loi sua lop hoc phan: " + e.getMessage());
+        }
+    }
+
+    public void xoaHocPhan(String MaLHP) {
+        String sql = "DELETE FROM lop_hoc_phan WHERE MaLHP = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, MaLHP);
+            pstmt.executeUpdate();
+            System.out.println("Xoa lop hoc phan thanh cong!");
+        } catch (Exception e) {
+            System.out.println("Loi xoa lop hoc phan: " + e.getMessage());
+        }
+    }
+
+    public void layHocPhanCanHocLai(String mssv) {
+        // SQL đã thêm điều kiện WHERE NOT IN để lọc bỏ các LHP cũ đã học
+        String sql = "SELECT lhp.MaLHP, mh.TenMon, lhp.MaHocKy, gv.HoTen, r.Diem " +
+                "FROM lop_hoc_phan lhp " +
+                "JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon " +
+                "JOIN giang_vien gv ON lhp.MaGV = gv.MaGV " +
+                "JOIN ( " +
+                "    SELECT lhp2.MaMon, MAX(d.Diem) AS Diem " +
+                "    FROM diem d " +
+                "    JOIN lop_hoc_phan lhp2 ON d.MaLHP = lhp2.MaLHP " +
+                "    WHERE d.MSSV = ? " +
+                "    GROUP BY lhp2.MaMon " +
+                "    HAVING MAX(IFNULL(d.Diem, 4.0)) < 4.0 " +
+                ") r ON mh.MaMon = r.MaMon " +
+                "WHERE lhp.MaLHP NOT IN (SELECT MaLHP FROM diem WHERE MSSV = ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Chú ý: Lần này chúng ta có 2 dấu hỏi (?) nên phải setString 2 lần
+            pstmt.setString(1, mssv); // Dấu ? cho Subquery (tìm môn rớt)
+            pstmt.setString(2, mssv); // Dấu ? cho điều kiện NOT IN (chặn LHP đã học)
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                System.out.println("\n--- DANH SACH LOP HOC PHAN CAN HOC LAI ---");
+                System.out.printf("%-15s | %-25s | %-10s | %-20s | %-10s\n", "Ma LHP", "Ten Mon", "Ma Hoc Ky",
+                        "Giang Vien", "Diem Cu");
+                System.out.println(
+                        "---------------------------------------------------------------------------------------------");
+
+                boolean hasData = false;
+                while (rs.next()) {
+                    hasData = true;
+                    System.out.printf("%-15s | %-25s | %-10s | %-20s | %-10.1f\n",
+                            rs.getString("MaLHP"),
+                            rs.getString("TenMon"),
+                            rs.getString("MaHocKy"),
+                            rs.getString("HoTen"),
+                            rs.getFloat("Diem"));
+                }
+
+                if (!hasData) {
+                    System.out.println("Khong co lop hoc phan moi nao dang mo cho cac mon ban can hoc lai.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Loi lay danh sach hoc phan can hoc lai: " + e.getMessage());
+        }
+    }
+
     public void layTatCaHocPhan() {
         String sql = "SELECT * FROM lop_hoc_phan lhp JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon join giang_vien gv on lhp.MaGV = gv.MaGV";
         try (Connection conn = DBConnection.getConnection();
@@ -185,4 +279,19 @@ public class HocPhanRepository {
             e.printStackTrace();
         }
     }
+
+    public int tinhTinChiHocLai(String mssv) {
+        String sql = "{? = CALL func_TinChiHocLai(?)}";
+        try (Connection conn = DBConnection.getConnection();
+                CallableStatement cstmt = conn.prepareCall(sql)) {
+            cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
+            cstmt.setString(2, mssv);
+            cstmt.execute();
+            return cstmt.getInt(1);
+        } catch (Exception e) {
+            System.out.println("Loi tinh tin chi hoc lai: " + e.getMessage());
+            return 0;
+        }
+    }
+
 }

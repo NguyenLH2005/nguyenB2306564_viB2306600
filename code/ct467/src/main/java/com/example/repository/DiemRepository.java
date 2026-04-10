@@ -125,7 +125,7 @@ public class DiemRepository {
     public void xemDanhSachSinhVienVaDiem(String maLHP) {
         String sql = "SELECT s.MSSV, s.HoTen, d.Diem FROM DIEM d JOIN SINH_VIEN s ON d.MSSV = s.MSSV WHERE d.MaLHP = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, maLHP);
             try (ResultSet rs = pstmt.executeQuery()) {
                 System.out.println("\nDANH SACH SINH VIEN - LOP HOC PHAN: " + maLHP);
@@ -148,4 +148,5 @@ public class DiemRepository {
             e.printStackTrace();
         }
     }
+
 }
