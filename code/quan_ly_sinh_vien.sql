@@ -278,19 +278,28 @@ BEGIN
     -- 6. Nếu tồn tại học phí thì xử lý
     IF v_TongCu IS NOT NULL THEN
 
-        -- Tính tổng mới
+        -- 7. Tính tổng mới
         SET v_TongMoi = v_TongCu - v_TienTru;
 
-        -- Nếu hết tiền → xóa luôn
+        -- 8. Nếu tổng tiền <= 0
         IF v_TongMoi <= 0 THEN
-            DELETE FROM HOC_PHI WHERE MaHocPhi = v_MaHocPhi;
+            UPDATE HOC_PHI
+            SET 
+                TongTien = 0,
+                TrangThai = CASE
+                    WHEN v_DaDong > 0 THEN 'Hoan tien'
+                    ELSE 'Chua dong'
+                END
+            WHERE MaHocPhi = v_MaHocPhi;
 
         ELSE
+            -- 9. Cập nhật bình thường
             UPDATE HOC_PHI
             SET 
                 TongTien = v_TongMoi,
                 TrangThai = CASE
-                    WHEN v_DaDong >= v_TongMoi THEN 'Da hoan tat'
+                    WHEN v_DaDong > v_TongMoi THEN 'Hoan tien'
+                    WHEN v_DaDong = v_TongMoi THEN 'Da hoan tat'
                     ELSE 'Chua hoan tat'
                 END
             WHERE MaHocPhi = v_MaHocPhi;
