@@ -35,13 +35,13 @@ public class HocPhiRepository {
 
                 // Kiểm tra xem có dữ liệu không
                 if (!rs.next()) {
-                    System.out.println("Không có sinh viên nào nợ học phí trong học kỳ " + maHocKy);
+                    System.out.println("Khong co sinh vien nao no hoc phi trong hoc ky " + maHocKy);
                     return;
                 }
 
                 // In tiêu đề (chỉ in khi có dữ liệu)
                 System.out.printf("%-10s | %-25s | %-10s | %-20s | %-15s | %-15s | %-15s\n",
-                        "MSSV", "Họ Tên", "Lớp", "Ngành", "Tổng Cần Thu", "Đã Đóng", "Còn Nợ");
+                        "MSSV", "Ho Ten", "Lop", "Nganh", "Tong Can Thu", "Da Dong", "Con No");
                 System.out.println(
                         "-----------------------------------------------------------------------------------------------------------------------");
 
@@ -61,7 +61,7 @@ public class HocPhiRepository {
                         "-----------------------------------------------------------------------------------------------------------------------");
             }
         } catch (Exception e) {
-            System.out.println("Lỗi thống kê: " + e.getMessage());
+            System.out.println("Loi thong ke: " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class HocPhiRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Lỗi khi lấy thông tin học phí: " + e.getMessage());
+            System.out.println("Loi khi lay thong tin hoc phi: " + e.getMessage());
             e.printStackTrace();
         }
 
