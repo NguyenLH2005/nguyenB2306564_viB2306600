@@ -22,7 +22,7 @@ public class HocPhanRepository {
             pstmt.executeUpdate();
             System.out.println("Them lop hoc phan thanh cong!");
         } catch (Exception e) {
-            System.out.println("Loi them lop hoc phan: " + e.getMessage());
+            System.out.println("Them hoc phan khong thanh cong vui long kiem tra lai thong tin");
         }
     }
 
@@ -38,7 +38,7 @@ public class HocPhanRepository {
             pstmt.executeUpdate();
             System.out.println("Sua lop hoc phan thanh cong!");
         } catch (Exception e) {
-            System.out.println("Loi sua lop hoc phan: " + e.getMessage());
+            System.out.println("Sua lop hoc phan khong thanh cong vui long kiem tra lai thong tin");
         }
     }
 
@@ -50,7 +50,7 @@ public class HocPhanRepository {
             pstmt.executeUpdate();
             System.out.println("Xoa lop hoc phan thanh cong!");
         } catch (Exception e) {
-            System.out.println("Loi xoa lop hoc phan: " + e.getMessage());
+            System.out.println("Xoa lop hoc phan khong thanh cong vui long kiem tra lai thong tin");
         }
     }
 
@@ -103,7 +103,7 @@ public class HocPhanRepository {
 
             }
         } catch (Exception e) {
-            System.out.println("Loi lay danh sach hoc phan can hoc lai: " + e.getMessage());
+            System.out.println("Loi lay danh sach hoc phan can hoc lai");
         }
         return true;
     }

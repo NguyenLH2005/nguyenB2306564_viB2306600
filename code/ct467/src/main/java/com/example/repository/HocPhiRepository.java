@@ -61,7 +61,7 @@ public class HocPhiRepository {
                         "-----------------------------------------------------------------------------------------------------------------------");
             }
         } catch (Exception e) {
-            System.out.println("Lỗi thống kê: " + e.getMessage());
+            System.out.println("Loi thong ke: " + e.getMessage());
         }
     }
 
