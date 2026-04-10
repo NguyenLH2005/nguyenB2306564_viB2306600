@@ -65,7 +65,7 @@ BEGIN
     
     UPDATE HOC_PHI 
     SET DaDong = DaDong + p_SoTien,
-        TrangThai = CASE WHEN (DaDong + p_SoTien) >= TongTien THEN 'Đã hoàn tất' ELSE 'Chưa hoàn tất' END
+        TrangThai = CASE WHEN (DaDong + p_SoTien) >= TongTien THEN 'Da hoan tat' ELSE 'Chua hoan tat' END
     WHERE MaHocPhi = p_MaHocPhi;
     
     COMMIT;
@@ -166,7 +166,7 @@ BEGIN
     JOIN LOP l ON sv.MaLop = l.MaLop
     JOIN NGANH n ON l.MaNganh = n.MaNganh
     WHERE hp.MaHocKy = p_MaHocKy 
-      AND hp.TrangThai != 'Đã hoàn tất' 
+      AND hp.TrangThai != 'Da hoan tat' 
       AND (hp.TongTien - hp.DaDong) > 0;
 END$$
 

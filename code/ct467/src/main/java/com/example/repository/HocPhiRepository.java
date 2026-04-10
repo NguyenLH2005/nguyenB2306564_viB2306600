@@ -95,7 +95,7 @@ public class HocPhiRepository {
         // tất'
         // Bạn có thể sửa tên bảng 'hoc_phi' cho khớp với CSDL thực tế
         String sql = "SELECT MaHocKy, TongTien, DaDong, TrangThai FROM hoc_phi "
-                + "WHERE MSSV = ? AND TrangThai != 'Đã hoàn tất'";
+                + "WHERE MSSV = ? AND TrangThai != 'Da hoan tat'";
 
         boolean coNo = false; // Biến kiểm tra xem sinh viên có nợ không
 
@@ -149,7 +149,7 @@ public class HocPhiRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Lỗi khi lấy thông tin học phí: " + e.getMessage());
+            System.out.println("Loi khi lay thong tin hoc phi: " + e.getMessage());
             e.printStackTrace();
         }
 

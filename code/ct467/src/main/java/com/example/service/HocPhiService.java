@@ -74,7 +74,7 @@ public class HocPhiService {
 
             // In ra thông báo hoàn tiền nếu có tiền dư
             if (tienHoanLai > 0) {
-                System.out.printf("=> Bạn đã đóng dư. Hệ thống hoàn lại số tiền: %.0f VNĐ\n", tienHoanLai);
+                System.out.printf("=> Ban da dong du. He thong hoan lai so tien: %.0f VNĐ\n", tienHoanLai);
             }
         } else {
             System.out.println("=> Giao dich that bai.");

@@ -131,7 +131,7 @@ CREATE TABLE HOC_PHI (
     MaHocKy VARCHAR(20) NOT NULL,
     TongTien FLOAT NOT NULL DEFAULT 0,
     DaDong FLOAT DEFAULT 0,
-    TrangThai VARCHAR(50) DEFAULT 'Chưa đóng',
+    TrangThai VARCHAR(50) DEFAULT 'Chua dong',
     FOREIGN KEY (MSSV) REFERENCES SINH_VIEN(MSSV),
     FOREIGN KEY (MaHocKy) REFERENCES HOC_KY(MaHocKy) 
 );
@@ -161,7 +161,7 @@ BEGIN
         SELECT COUNT(*) INTO v_count FROM SINH_VIEN WHERE MSSV = NEW.Username;
         IF v_count = 0 THEN
             SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'LỖI: Username này không tồn tại trong bảng SINH_VIEN!';
+            SET MESSAGE_TEXT = 'Loi: Username nay khong ton tai trong bang SINH_VIEN!';
         END IF;
         
     -- Nếu là tài khoản Giảng Viên
@@ -169,7 +169,7 @@ BEGIN
         SELECT COUNT(*) INTO v_count FROM GIANG_VIEN WHERE MaGV = NEW.Username;
         IF v_count = 0 THEN
             SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'LỖI: Username này không tồn tại trong bảng GIANG_VIEN!';
+            SET MESSAGE_TEXT = 'Loi: Username nay khong ton tai trong bang GIANG_VIEN!';
         END IF;
     END IF;
 END$$
@@ -217,12 +217,12 @@ BEGIN
         -- Đã có phiếu thu của học kỳ này -> Cộng dồn tiền
         UPDATE HOC_PHI 
         SET TongTien = TongTien + v_TienThem,
-            TrangThai = CASE WHEN DaDong >= (TongTien + v_TienThem) THEN 'Đã hoàn tất' ELSE 'Chưa hoàn tất' END
+            TrangThai = CASE WHEN DaDong >= (TongTien + v_TienThem) THEN 'Da hoan tat' ELSE 'Chua hoan tat' END
         WHERE MaHocPhi = v_MaHocPhi;
     ELSE
         -- Chưa có phiếu thu (môn đăng ký đầu tiên của học kỳ) -> Tạo mới
         INSERT INTO HOC_PHI (MaHocPhi, MSSV, MaHocKy, TongTien, DaDong, TrangThai)
-        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chưa đóng');
+        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chua dong');
     END IF;
 END$$
 
@@ -270,11 +270,11 @@ BEGIN
         TongTien = TongTien - v_TienTru,
         TrangThai = CASE 
                         -- Nếu trừ xong mà tổng tiền về 0 và chưa đóng đồng nào
-                        WHEN (TongTien - v_TienTru) <= 0 AND DaDong <= 0 THEN 'Chưa đóng'
+                        WHEN (TongTien - v_TienTru) <= 0 AND DaDong <= 0 THEN 'Chua dong'
                         -- Nếu số tiền đã đóng lớn hơn hoặc bằng tổng tiền mới (do hủy môn)
-                        WHEN DaDong >= (TongTien - v_TienTru) THEN 'Đã hoàn tất' 
+                        WHEN DaDong >= (TongTien - v_TienTru) THEN 'Da hoan tat' 
                         -- Các trường hợp còn lại
-                        ELSE 'Chưa hoàn tất' 
+                        ELSE 'Chua hoan tat' 
                     END
     WHERE MaHocPhi = v_MaHocPhi;
 

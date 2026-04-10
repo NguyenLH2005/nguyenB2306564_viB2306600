@@ -149,7 +149,7 @@ public class HocPhanRepository {
             }
 
             if (maHK == null) {
-                System.out.println("Không tìm thấy học kỳ.");
+                System.out.println("Khong tim thay hoc ky.");
                 return;
             }
 
@@ -183,7 +183,7 @@ public class HocPhanRepository {
                     }
 
                     if (!hasData) {
-                        System.out.println("Không có lớp học phần trong học kỳ này.");
+                        System.out.println("Khong co lop hoc phan trong hoc ky nay.");
                     }
 
                     System.out.println(
@@ -192,7 +192,7 @@ public class HocPhanRepository {
             }
 
         } catch (Exception e) {
-            System.out.println("Lỗi tải danh sách lớp học phần: " + e.getMessage());
+            System.out.println("Loi tai danh sach lop hoc phan: " + e.getMessage());
             e.printStackTrace();
         }
     }
