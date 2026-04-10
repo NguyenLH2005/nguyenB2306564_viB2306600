@@ -64,7 +64,9 @@ public class NhanSuService {
                 case "2":
                     System.out.print("Nhap nam bat dau hoc (VD: 2023, 2024): ");
                     String namHoc = scanner.nextLine().trim();
-                    namHoc = namHoc.substring(2); // lấy 2 số cuối vd: 2024 -> 24
+                    if (namHoc.length() == 4) {
+                        namHoc = namHoc.substring(2); // lấy 2 số cuối vd: 2024 -> 24
+                    }
                     String newMssv = repository.generateMSSV(namHoc);
                     System.out.println("=> MSSV duoc cap: " + newMssv);
 
@@ -131,11 +133,11 @@ public class NhanSuService {
             switch (choice) {
                 case "1":
                     List<GiangVien> gvList = repository.getAllGiangVien();
-                    System.out.printf("%-15s %-30s %-30s %-15s\n", "Ma GV", "Ho Ten", "Ten Khoa", "Ma Khoa");
+                    System.out.printf("%-15s %-30s %-40s %-15s\n", "Ma GV", "Ho Ten", "Ten Khoa", "Ma Khoa");
                     System.out.println(
                             "---------------------------------------------------------------------------------------------");
                     for (GiangVien gv : gvList) {
-                        System.out.printf("%-15s %-30s %-30s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getTenKhoa(),
+                        System.out.printf("%-15s %-30s %-40s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getTenKhoa(),
                                 gv.getMaKhoa());
                     }
                     break;

@@ -61,7 +61,7 @@ public class HocPhiRepository {
                         "-----------------------------------------------------------------------------------------------------------------------");
             }
         } catch (Exception e) {
-            System.out.println("Loi thong ke: " + e.getMessage());
+            System.out.println("Lỗi thống kê: " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class HocPhiRepository {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Loi khi lay thong tin hoc phi: " + e.getMessage());
+            System.out.println("Lỗi khi lấy thông tin học phí: " + e.getMessage());
             e.printStackTrace();
         }
 
