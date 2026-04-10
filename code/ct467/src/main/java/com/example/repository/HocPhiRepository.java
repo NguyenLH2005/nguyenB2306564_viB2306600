@@ -72,12 +72,12 @@ public class HocPhiRepository {
                 CallableStatement cstmt = conn.prepareCall(sql)) {
             cstmt.setString(1, maHocKy);
             try (ResultSet rs = cstmt.executeQuery()) {
-                System.out.printf("%-10s %-30s %-20s %-20s %-20s\n", "Ma Khoa", "Ten Khoa", "Tong Phai Thu", "Thuc Thu",
+                System.out.printf("%-10s %-40s %-40s %-20s %-20s\n", "Ma Khoa", "Ten Khoa", "Tong Phai Thu", "Thuc Thu",
                         "Con No");
                 System.out.println(
                         "-----------------------------------------------------------------------------------------------------------");
                 while (rs.next()) {
-                    System.out.printf("%-10s %-30s %-20.0f %-20.0f %-20.0f\n",
+                    System.out.printf("%-10s %-40s %-40.0f %-20.0f %-20.0f\n",
                             rs.getString("MaKhoa"),
                             rs.getString("TenKhoa"),
                             rs.getFloat("TongPhaiThu"),
