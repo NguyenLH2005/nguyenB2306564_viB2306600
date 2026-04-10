@@ -159,7 +159,9 @@ public class HocPhanService {
             System.out.println("=> Ban khong can hoc lai mon nao.");
             return;
         }
-        (new HocPhanRepository()).layHocPhanCanHocLai(mssv);
+        if ((new HocPhanRepository()).layHocPhanCanHocLai(mssv) == false) {
+            return;
+        }
         System.out.print("Nhap ma Lop hoc phan muon hoc lai: ");
         String maLHP = scanner.nextLine().trim();
         if (repository.dangKyHocPhan(mssv, maLHP)) {

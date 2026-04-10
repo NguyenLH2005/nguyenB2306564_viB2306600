@@ -58,7 +58,7 @@ public class DiemRepository {
                 + "JOIN lop_hoc_phan lhp ON d.MaLHP = lhp.MaLHP "
                 + "JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon "
                 + "WHERE lhp.MaHocKy = (SELECT MaHocKy FROM hoc_ky ORDER BY MaNamHoc DESC, MaHocKy DESC LIMIT 1) "
-                + "AND d.MSSV = ?";
+                + "AND d.MSSV = ? AND d.Diem IS NULL";
 
         // Chỉ cần 1 khối try-with-resources cho Connection và PreparedStatement
         try (Connection conn = DBConnection.getConnection();
@@ -89,14 +89,13 @@ public class DiemRepository {
                 }
 
                 if (!hasData) {
-                    System.out.println("Sinh viên chưa đăng ký học phần nào trong học kỳ này.");
+                    System.out.println("Sinh vien chua dang ky hoc phan nao trong hoc ky nay.");
                 }
                 System.out.println("---------------------------------------------------------------");
             }
 
         } catch (Exception e) {
-            System.out.println("Lỗi khi hiển thị danh sách đăng ký: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Loi khi hien thi danh sach dang ky vui long kiem tra lai");
         }
     }
 
@@ -116,8 +115,7 @@ public class DiemRepository {
             }
 
         } catch (Exception e) {
-            System.out.println("Loi kiem tra dang ky: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Loi kiem tra dang ky vui long kiem tra lai");
             return false;
         }
     }

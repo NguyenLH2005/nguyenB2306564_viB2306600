@@ -54,7 +54,7 @@ public class HocPhanRepository {
         }
     }
 
-    public void layHocPhanCanHocLai(String mssv) {
+    public boolean layHocPhanCanHocLai(String mssv) {
         // SQL đã thêm điều kiện WHERE NOT IN để lọc bỏ các LHP cũ đã học
         String sql = "SELECT lhp.MaLHP, mh.TenMon, lhp.MaHocKy, gv.HoTen, r.Diem " +
                 "FROM lop_hoc_phan lhp " +
@@ -68,7 +68,8 @@ public class HocPhanRepository {
                 "    GROUP BY lhp2.MaMon " +
                 "    HAVING MAX(IFNULL(d.Diem, 4.0)) < 4.0 " +
                 ") r ON mh.MaMon = r.MaMon " +
-                "WHERE lhp.MaLHP NOT IN (SELECT MaLHP FROM diem WHERE MSSV = ?)";
+                "WHERE lhp.MaLHP NOT IN (SELECT MaLHP FROM diem WHERE MSSV = ?) " +
+                "AND lhp.MaHocKy = (SELECT MaHocKy FROM hoc_ky ORDER BY MaHocKy DESC LIMIT 1)";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -97,11 +98,14 @@ public class HocPhanRepository {
 
                 if (!hasData) {
                     System.out.println("Khong co lop hoc phan moi nao dang mo cho cac mon ban can hoc lai.");
+                    return false;
                 }
+
             }
         } catch (Exception e) {
             System.out.println("Loi lay danh sach hoc phan can hoc lai: " + e.getMessage());
         }
+        return true;
     }
 
     public void layTatCaHocPhan() {
@@ -215,20 +219,43 @@ public class HocPhanRepository {
             cstmt.execute();
             return true;
         } catch (Exception e) {
-            System.out.println("Loi dang ky: " + e.getMessage());
+            System.out.println("Loi dang ky: Kiem tra lai ma hoc phan");
             return false;
         }
     }
 
     // Task 2
     public boolean huyDangKyHocPhan(String mssv, String maLHP) {
-        String sql = "{CALL sp_HuyDangKyHocPhan(?, ?)}";
+
+        // BƯỚC 1: Kiểm tra xem sinh viên có thực sự đang đăng ký lớp này không
+        String checkSql = "SELECT COUNT(*) FROM diem WHERE MSSV = ? AND MaLHP = ?";
+
         try (Connection conn = DBConnection.getConnection();
-                CallableStatement cstmt = conn.prepareCall(sql)) {
-            cstmt.setString(1, mssv);
-            cstmt.setString(2, maLHP);
-            cstmt.execute();
-            return true;
+                PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+
+            checkStmt.setString(1, mssv);
+            checkStmt.setString(2, maLHP);
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    if (count == 0) {
+
+                        System.out.println("=> Loi: Ma lop hoc phan khong ton tai hoac ban chua dang ky lop nay!");
+                        return false;
+                    }
+                }
+            }
+
+            // BƯỚC 2: Nếu bước 1 hợp lệ (đã đăng ký), tiến hành gọi Stored Procedure để hủy
+            String sql = "{CALL sp_HuyDangKyHocPhan(?, ?)}";
+            try (CallableStatement cstmt = conn.prepareCall(sql)) {
+                cstmt.setString(1, mssv);
+                cstmt.setString(2, maLHP);
+                cstmt.execute();
+                return true;
+            }
+
         } catch (Exception e) {
             System.out.println("Loi huy dang ky: " + e.getMessage());
             return false;

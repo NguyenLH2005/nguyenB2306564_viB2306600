@@ -24,24 +24,27 @@ public class SinhVienRepository {
 
     // Task 4: Xem bản điểm chi tiết (Bonus query)
     public void xemBangDiem(String mssv) {
-        String sql = "SELECT d.MaLHP, mh.TenMon, mh.SoTinChi, d.Diem " +
+        String sql = "SELECT d.MaLHP, mh.TenMon, mh.SoTinChi, d.Diem, lhp.MaHocKy " +
                 "FROM DIEM d " +
                 "JOIN LOP_HOC_PHAN lhp ON d.MaLHP = lhp.MaLHP " +
                 "JOIN MON_HOC mh ON lhp.MaMon = mh.MaMon " +
+                "JOIN HOC_KY hk ON lhp.MaHocKy = hk.MaHocKy " +
                 "WHERE d.MSSV = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, mssv);
             try (ResultSet rs = pstmt.executeQuery()) {
-                System.out.printf("%-20s %-30s %-10s %-10s\n", "Ma LHP", "Ten Mon", "So TC", "Diem");
+                System.out.printf("%-20s %-30s %-10s %-10s %-10s\n", "Ma LHP", "Ten Mon", "So TC",
+                        "Ma Hoc Ky", "Diem");
                 System.out.println("--------------------------------------------------------------------------------");
                 while (rs.next()) {
                     float diem = rs.getFloat("Diem");
                     String diemStr = rs.wasNull() ? "Chua co" : String.valueOf(diem);
-                    System.out.printf("%-20s %-30s %-10d %-10s\n",
+                    System.out.printf("%-20s %-30s %-10d %-10s %-10s\n",
                             rs.getString("MaLHP"),
                             rs.getString("TenMon"),
                             rs.getInt("SoTinChi"),
+                            rs.getString("MaHocKy"),
                             diemStr);
                 }
             }
