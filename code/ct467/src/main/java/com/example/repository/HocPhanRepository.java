@@ -125,15 +125,12 @@ public class HocPhanRepository {
         }
     }
 
-    // Lấy học phần ở học kỳ gần đây nhất
     public void hienThiHPHienTai() {
-        // Lấy học kỳ mới nhất
         String sql_HocKy = "SELECT MaHocKy FROM hoc_ky ORDER BY MaHocKy DESC LIMIT 1";
 
-        // Cập nhật câu lệnh SQL: Gọi func_DemSiSo(MaLHP) và đặt tên cột kết quả là
-        // 'SiSo'
+        // Lấy thêm SoLuongMax để tính chỗ trống
         String sql_LHP = "SELECT lhp.MaLHP, mh.TenMon, lhp.MaHocKy, lhp.MaGV, lhp.SoLuongMax, "
-                + "func_DemSiSo(lhp.MaLHP) AS SiSo "
+                + "func_DemSiSo(lhp.MaLHP) AS DaDangKy "
                 + "FROM lop_hoc_phan lhp "
                 + "JOIN mon_hoc mh ON lhp.MaMon = mh.MaMon "
                 + "WHERE lhp.MaHocKy = ?";
@@ -151,21 +148,18 @@ public class HocPhanRepository {
                 }
             }
 
-            // Nếu không có học kỳ
             if (maHK == null) {
                 System.out.println("Không tìm thấy học kỳ.");
                 return;
             }
 
             System.out.println("\n--- DANH SACH LOP HOC PHAN HOC KY HIEN TAI (" + maHK + ") ---");
-            // Thêm cột hiển thị Sĩ Số
             System.out.printf("%-15s | %-25s | %-10s | %-10s | %-15s | %-10s\n",
-                    "Ma LHP", "Ten Mon", "Ma Hoc Ky", "Ma GV", "Si So (DK/Max)", "Con Trong");
-            System.out
-                    .println(
-                            "-----------------------------------------------------------------------------------------------------");
+                    "Ma LHP", "Ten Mon", "Ma Hoc Ky", "Ma GV", "Da Dang Ky", "Con Trong");
+            System.out.println(
+                    "-------------------------------------------------------------------------------------------");
 
-            // 2. Lấy danh sách lớp học phần theo học kỳ
+            // 2. Lấy danh sách lớp học phần
             try (PreparedStatement pstmt = conn.prepareStatement(sql_LHP)) {
                 pstmt.setString(1, maHK);
 
@@ -174,32 +168,26 @@ public class HocPhanRepository {
 
                     while (rs.next()) {
                         hasData = true;
-                        String siSoStr = rs.getString("SiSo");
-                        int conTrong = 0;
-                        if (siSoStr != null && siSoStr.contains("/")) {
-                            String[] parts = siSoStr.split("/");
-                            try {
-                                int daDangKy = Integer.parseInt(parts[0].trim());
-                                int toiDa = Integer.parseInt(parts[1].trim());
-                                conTrong = toiDa - daDangKy;
-                            } catch (Exception e) {
-                            }
-                        }
 
-                        System.out.printf("%-15s | %-25s | %-10s | %-10s | %-15s | %-10d\n",
+                        int daDangKy = rs.getInt("DaDangKy");
+                        int toiDa = rs.getInt("SoLuongMax");
+                        int conTrong = toiDa - daDangKy;
+
+                        System.out.printf("%-15s | %-25s | %-10s | %-10s | %-15d | %-10d\n",
                                 rs.getString("MaLHP"),
                                 rs.getString("TenMon"),
                                 rs.getString("MaHocKy"),
                                 rs.getString("MaGV"),
-                                siSoStr,
-                                conTrong); // <--- In ra số lượng chỗ còn trống
+                                daDangKy,
+                                conTrong);
                     }
 
                     if (!hasData) {
                         System.out.println("Không có lớp học phần trong học kỳ này.");
                     }
+
                     System.out.println(
-                            "-----------------------------------------------------------------------------------------------------\n");
+                            "-------------------------------------------------------------------------------------------\n");
                 }
             }
 

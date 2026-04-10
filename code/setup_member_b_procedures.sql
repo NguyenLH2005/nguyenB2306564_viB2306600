@@ -126,20 +126,25 @@ DELIMITER ;
 -- ==============================================================================
 -- 7. [TASK 5] STORED FUNCTION: KIỂM TRA SĨ SỐ LỚP HỌC PHẦN (THÀNH VIÊN B)
 -- ==============================================================================
+DELIMITER $$
+
 DROP FUNCTION IF EXISTS func_DemSiSo$$
 
 CREATE FUNCTION func_DemSiSo(p_MaLHP VARCHAR(20)) 
-RETURNS VARCHAR(50)
+RETURNS INT
 DETERMINISTIC
 BEGIN
     DECLARE v_DaDangKy INT DEFAULT 0;
-    DECLARE v_ToiDa INT DEFAULT 0;
     
-    SELECT COUNT(MSSV) INTO v_DaDangKy FROM DIEM WHERE MaLHP = p_MaLHP;
-    SELECT SoLuongMax INTO v_ToiDa FROM LOP_HOC_PHAN WHERE MaLHP = p_MaLHP;
+    SELECT COUNT(MSSV) 
+    INTO v_DaDangKy 
+    FROM DIEM 
+    WHERE MaLHP = p_MaLHP;
     
-    RETURN CONCAT(v_DaDangKy, '/', v_ToiDa);
+    RETURN v_DaDangKy;
 END$$
+
+DELIMITER ;
 
 -- ==============================================================================
 -- 9. [TASK 7] THỦ TỤC: THỐNG KÊ SV NỢ HỌC PHÍ (THÀNH VIÊN B)
