@@ -222,7 +222,7 @@ BEGIN
     ELSE
         -- Chưa có phiếu thu (môn đăng ký đầu tiên của học kỳ) -> Tạo mới
         INSERT INTO HOC_PHI (MaHocPhi, MSSV, MaHocKy, TongTien, DaDong, TrangThai)
-        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chua dong');
+        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chua hoan tat');
     END IF;
 END$$
 
