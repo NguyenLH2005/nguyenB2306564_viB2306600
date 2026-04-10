@@ -222,7 +222,7 @@ BEGIN
     ELSE
         -- Chưa có phiếu thu (môn đăng ký đầu tiên của học kỳ) -> Tạo mới
         INSERT INTO HOC_PHI (MaHocPhi, MSSV, MaHocKy, TongTien, DaDong, TrangThai)
-        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chua hoan tat');
+        VALUES (v_MaHocPhi, NEW.MSSV, v_MaHocKy, v_TienThem, 0, 'Chua dong');
     END IF;
 END$$
 
@@ -232,6 +232,8 @@ DELIMITER ;
 -- 7. TRIGGER TRỪ TIỀN KHI HỦY MÔN (DELETE KHỎI BẢNG ĐIỂM)
 -- ==============================================================================
 DELIMITER $$
+
+DROP TRIGGER IF EXISTS trg_Calculate_HocPhi_AfterHuyDangKy$$
 
 CREATE TRIGGER trg_Calculate_HocPhi_AfterHuyDangKy
 AFTER DELETE ON DIEM
@@ -244,42 +246,58 @@ BEGIN
     DECLARE v_DonGia FLOAT;
     DECLARE v_TienTru FLOAT;
     DECLARE v_MaHocPhi VARCHAR(30);
-    
-    -- 1. Lấy thông tin môn học và học kỳ từ lớp học phần sinh viên VỪA HỦY
+    DECLARE v_TongCu FLOAT;
+    DECLARE v_DaDong FLOAT;
+    DECLARE v_TongMoi FLOAT;
+
+    -- 1. Lấy thông tin môn học
     SELECT lhp.MaHocKy, hk.MaNamHoc, mh.MaLoaiMon, mh.SoTinChi
     INTO v_MaHocKy, v_MaNamHoc, v_MaLoaiMon, v_SoTinChi
     FROM LOP_HOC_PHAN lhp
     JOIN HOC_KY hk ON lhp.MaHocKy = hk.MaHocKy
     JOIN MON_HOC mh ON lhp.MaMon = mh.MaMon
     WHERE lhp.MaLHP = OLD.MaLHP;
-    
-    -- 2. Dò tìm Đơn giá tín chỉ
+
+    -- 2. Lấy đơn giá tín chỉ
     SELECT SoTienMotTinChi INTO v_DonGia
     FROM DON_GIA_TIN_CHI
     WHERE MaNamHoc = v_MaNamHoc AND MaLoaiMon = v_MaLoaiMon;
-    
-    -- 3. Tính số tiền cần trừ đi
+
+    -- 3. Tính tiền cần trừ
     SET v_TienTru = v_SoTinChi * v_DonGia;
-    
-    -- 4. Tạo lại mã Học phí tương ứng
+
+    -- 4. Mã học phí
     SET v_MaHocPhi = CONCAT('HP_', OLD.MSSV, '_', v_MaHocKy);
-    
-    -- 5. Cập nhật TRỪ TIỀN trong bảng HOC_PHI
-    UPDATE HOC_PHI 
-    SET 
-        TongTien = TongTien - v_TienTru,
-        TrangThai = CASE 
-                        -- Nếu trừ xong mà tổng tiền về 0 và chưa đóng đồng nào
-                        WHEN (TongTien - v_TienTru) <= 0 AND DaDong <= 0 THEN 'Chua dong'
-                        -- Nếu số tiền đã đóng lớn hơn hoặc bằng tổng tiền mới (do hủy môn)
-                        WHEN DaDong >= (TongTien - v_TienTru) THEN 'Da hoan tat' 
-                        -- Các trường hợp còn lại
-                        ELSE 'Chua hoan tat' 
-                    END
+
+    -- 5. Lấy học phí hiện tại
+    SELECT TongTien, DaDong 
+    INTO v_TongCu, v_DaDong
+    FROM HOC_PHI
     WHERE MaHocPhi = v_MaHocPhi;
+
+    -- 6. Nếu tồn tại học phí thì xử lý
+    IF v_TongCu IS NOT NULL THEN
+
+        -- Tính tổng mới
+        SET v_TongMoi = v_TongCu - v_TienTru;
+
+        -- Nếu hết tiền → xóa luôn
+        IF v_TongMoi <= 0 THEN
+            DELETE FROM HOC_PHI WHERE MaHocPhi = v_MaHocPhi;
+
+        ELSE
+            UPDATE HOC_PHI
+            SET 
+                TongTien = v_TongMoi,
+                TrangThai = CASE
+                    WHEN v_DaDong >= v_TongMoi THEN 'Da hoan tat'
+                    ELSE 'Chua hoan tat'
+                END
+            WHERE MaHocPhi = v_MaHocPhi;
+        END IF;
+
+    END IF;
 
 END$$
 
 DELIMITER ;
-
-

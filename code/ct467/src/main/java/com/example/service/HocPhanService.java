@@ -46,13 +46,13 @@ public class HocPhanService {
     }
 
     private void thucHienThemHocPhan(Scanner scanner) {
-        System.out.print("Nhap Ma LHP (VD: LHP01): ");
+        System.out.print("Nhap Ma LHP (VD: CT101_HK1_25): ");
         String maLHP = scanner.nextLine().trim();
         System.out.print("Nhap Ma Mon (VD: CT101): ");
         String maMon = scanner.nextLine().trim();
         System.out.print("Nhap Ma Hoc Ky (VD: HK1_2425): ");
         String maHocKy = scanner.nextLine().trim();
-        System.out.print("Nhap Ma Giao Vien (VD: GV01): ");
+        System.out.print("Nhap Ma Giao Vien (VD: 100001): ");
         String maGV = scanner.nextLine().trim();
         System.out.print("Nhap So Luong Toi Da (Mac dinh 40): ");
         String soLuongStr = scanner.nextLine().trim();
