@@ -53,19 +53,4 @@ public class SinhVienRepository {
         }
     }
 
-    // Task 6: Tra cứu công nợ cá nhân
-    public float traCuuCongNo(String mssv, String maHocKy) {
-        String sql = "{? = CALL func_TinhTienNo(?, ?)}";
-        try (Connection conn = DBConnection.getConnection();
-                CallableStatement cstmt = conn.prepareCall(sql)) {
-            cstmt.registerOutParameter(1, java.sql.Types.FLOAT);
-            cstmt.setString(2, mssv);
-            cstmt.setString(3, maHocKy);
-            cstmt.execute();
-            return cstmt.getFloat(1);
-        } catch (Exception e) {
-            System.out.println("Loi tra cuu cong no: " + e.getMessage());
-            return -1;
-        }
-    }
 }

@@ -142,35 +142,6 @@ BEGIN
 END$$
 
 -- ==============================================================================
--- 8. [TASK 6] STORED FUNCTION: TRA CỨU CÔNG NỢ CÁ NHÂN (THÀNH VIÊN B)
--- ==============================================================================
-DROP FUNCTION IF EXISTS func_TinhTienNo$$
-
-CREATE FUNCTION func_TinhTienNo(p_MSSV VARCHAR(10), p_MaHocKy VARCHAR(20))
-RETURNS FLOAT
-DETERMINISTIC
-BEGIN
-    DECLARE v_TienNo FLOAT DEFAULT 0;
-    DECLARE v_TongTien FLOAT DEFAULT 0;
-    DECLARE v_DaDong FLOAT DEFAULT 0;
-    
-    SELECT TongTien, DaDong INTO v_TongTien, v_DaDong
-    FROM HOC_PHI
-    WHERE MSSV = p_MSSV AND MaHocKy = p_MaHocKy;
-    
-    IF v_TongTien IS NULL THEN
-        SET v_TienNo = 0;
-    ELSE
-        SET v_TienNo = v_TongTien - v_DaDong;
-        IF v_TienNo < 0 THEN
-            SET v_TienNo = 0;
-        END IF;
-    END IF;
-    
-    RETURN v_TienNo;
-END$$
-
--- ==============================================================================
 -- 9. [TASK 7] THỦ TỤC: THỐNG KÊ SV NỢ HỌC PHÍ (THÀNH VIÊN B)
 -- ==============================================================================
 DROP PROCEDURE IF EXISTS sp_ThongKeSVNoHocPhi$$

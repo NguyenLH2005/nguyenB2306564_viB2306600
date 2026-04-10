@@ -21,16 +21,4 @@ public class SinhVienService {
         }
     }
 
-    // Task 6
-    public void traCuuCongNoCaNhan(Scanner scanner, String mssv) {
-        System.out.print("Nhap ma Hoc ky can tra cuu cong no (VD: HK1_2425): ");
-        String maHocKy = scanner.nextLine();
-
-        float congNo = repository.traCuuCongNo(mssv, maHocKy);
-        if (congNo != -1) {
-            System.out.printf("=> TONG SO TIEN CON NO TRONG HOC KY LA: %.0f VND\n", congNo);
-        } else {
-            System.out.println("=> Khong tim thay thong tin cong no hoac co loi xay ra.");
-        }
-    }
 }

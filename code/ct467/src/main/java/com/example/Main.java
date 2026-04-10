@@ -100,7 +100,6 @@ public class Main {
             System.out.println("3. Dong tien hoc phi");
             System.out.println("4. Xem bang diem & Tinh GPA");
             System.out.println("5. Xem va dang ky hoc lai");
-            System.out.println("6. Tra cuu cong no ca nhan");
             System.out.println("0. Dang xuat");
             System.out.println("==============================================");
             System.out.print("Chon chuc nang (0-6): ");
@@ -121,9 +120,6 @@ public class Main {
                     break;
                 case "5":
                     hocPhanService.thucHienHocLai(scanner, loggedInUsername);
-                    break;
-                case "6":
-                    sinhVienService.traCuuCongNoCaNhan(scanner, loggedInUsername);
                     break;
                 case "0":
                     loggedInRole = null;
