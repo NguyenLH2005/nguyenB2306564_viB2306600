@@ -24,10 +24,17 @@ public class NhanSuService {
             System.out.print("Chon chuc nang: ");
             String choice = scanner.nextLine();
             switch (choice) {
-                case "1": menuSinhVien(scanner); break;
-                case "2": menuGiangVien(scanner); break;
-                case "0": running = false; break;
-                default: System.out.println("Lua chon chua dung!");
+                case "1":
+                    menuSinhVien(scanner);
+                    break;
+                case "2":
+                    menuGiangVien(scanner);
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Lua chon chua dung!");
             }
         }
     }
@@ -47,22 +54,25 @@ public class NhanSuService {
                 case "1":
                     List<SinhVien> svList = repository.getAllSinhVien();
                     System.out.printf("%-15s %-30s %-30s %-15s\n", "MSSV", "Ho Ten", "Ten Lop", "Ma Lop");
-                    System.out.println("---------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "---------------------------------------------------------------------------------------------");
                     for (SinhVien sv : svList) {
-                        System.out.printf("%-15s %-30s %-30s %-15s\n", sv.getMssv(), sv.getHoTen(), sv.getTenLop(), sv.getMaLop());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", sv.getMssv(), sv.getHoTen(), sv.getTenLop(),
+                                sv.getMaLop());
                     }
                     break;
                 case "2":
-                    System.out.print("Nhap nam bat dau hoc (VD: 23, 24): ");
-                    String namHoc = scanner.nextLine();
+                    System.out.print("Nhap nam bat dau hoc (VD: 2023, 2024): ");
+                    String namHoc = scanner.nextLine().trim();
+                    namHoc = namHoc.substring(2); // lấy 2 số cuối vd: 2024 -> 24
                     String newMssv = repository.generateMSSV(namHoc);
                     System.out.println("=> MSSV duoc cap: " + newMssv);
-                    
+
                     System.out.print("Nhap ho ten sinh vien: ");
                     String hoTen = scanner.nextLine();
                     System.out.print("Nhap ma lop (VD: LOP01): ");
                     String maLop = scanner.nextLine();
-                    
+
                     SinhVien svNew = new SinhVien();
                     svNew.setMssv(newMssv);
                     svNew.setHoTen(hoTen);
@@ -80,22 +90,29 @@ public class NhanSuService {
                     String hoTenMoi = scanner.nextLine();
                     System.out.print("Nhap ma lop moi (co the giu nguyen): ");
                     String maLopMoi = scanner.nextLine();
-                    
+
                     SinhVien svUpdate = new SinhVien();
                     svUpdate.setMssv(mssvSua);
                     svUpdate.setHoTen(hoTenMoi);
                     svUpdate.setMaLop(maLopMoi);
-                    if (repository.updateSinhVien(svUpdate)) System.out.println("=> Sua thanh cong!");
-                    else System.out.println("=> Sua that bai!");
+                    if (repository.updateSinhVien(svUpdate))
+                        System.out.println("=> Sua thanh cong!");
+                    else
+                        System.out.println("=> Sua that bai!");
                     break;
                 case "4":
                     System.out.print("Nhap MSSV can xoa: ");
                     String mssvXoa = scanner.nextLine();
-                    if (repository.deleteSinhVien(mssvXoa)) System.out.println("=> Xoa thanh cong (Kem tai khoan)!");
-                    else System.out.println("=> Xoa that bai!");
+                    if (repository.deleteSinhVien(mssvXoa))
+                        System.out.println("=> Xoa thanh cong (Kem tai khoan)!");
+                    else
+                        System.out.println("=> Xoa that bai!");
                     break;
-                case "0": running = false; break;
-                default: System.out.println("Lua chon chua dung!");
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Lua chon chua dung!");
             }
         }
     }
@@ -115,9 +132,11 @@ public class NhanSuService {
                 case "1":
                     List<GiangVien> gvList = repository.getAllGiangVien();
                     System.out.printf("%-15s %-30s %-30s %-15s\n", "Ma GV", "Ho Ten", "Ten Khoa", "Ma Khoa");
-                    System.out.println("---------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "---------------------------------------------------------------------------------------------");
                     for (GiangVien gv : gvList) {
-                        System.out.printf("%-15s %-30s %-30s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getTenKhoa(), gv.getMaKhoa());
+                        System.out.printf("%-15s %-30s %-30s %-15s\n", gv.getMaGV(), gv.getHoTen(), gv.getTenKhoa(),
+                                gv.getMaKhoa());
                     }
                     break;
                 case "2":
@@ -125,10 +144,10 @@ public class NhanSuService {
                     String maKhoa = scanner.nextLine();
                     String newMaGv = repository.generateMaGV(maKhoa);
                     System.out.println("=> Ma GV duoc cap tu dong: " + newMaGv);
-                    
+
                     System.out.print("Nhap ho ten giang vien: ");
                     String hoTen = scanner.nextLine();
-                    
+
                     GiangVien gvNew = new GiangVien();
                     gvNew.setMaGV(newMaGv);
                     gvNew.setHoTen(hoTen);
@@ -146,22 +165,29 @@ public class NhanSuService {
                     String hoTenGvMoi = scanner.nextLine();
                     System.out.print("Nhap ma Khoa moi (co the giu nguyen): ");
                     String maKhoaMoi = scanner.nextLine();
-                    
+
                     GiangVien gvUpdate = new GiangVien();
                     gvUpdate.setMaGV(maGvSua);
                     gvUpdate.setHoTen(hoTenGvMoi);
                     gvUpdate.setMaKhoa(maKhoaMoi);
-                    if (repository.updateGiangVien(gvUpdate)) System.out.println("=> Sua thanh cong!");
-                    else System.out.println("=> Sua that bai!");
+                    if (repository.updateGiangVien(gvUpdate))
+                        System.out.println("=> Sua thanh cong!");
+                    else
+                        System.out.println("=> Sua that bai!");
                     break;
                 case "4":
                     System.out.print("Nhap Ma GV can xoa: ");
                     String maGvXoa = scanner.nextLine();
-                    if (repository.deleteGiangVien(maGvXoa)) System.out.println("=> Xoa thanh cong (Kem tai khoan)!");
-                    else System.out.println("=> Xoa that bai!");
+                    if (repository.deleteGiangVien(maGvXoa))
+                        System.out.println("=> Xoa thanh cong (Kem tai khoan)!");
+                    else
+                        System.out.println("=> Xoa that bai!");
                     break;
-                case "0": running = false; break;
-                default: System.out.println("Lua chon chua dung!");
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Lua chon chua dung!");
             }
         }
     }
